@@ -58,69 +58,70 @@ export default ${pageName}Page;
       }
     );
     writeFileSync(paths.utilsFilePath, updatedUtilsFileContent, "utf8");
-  }
 
-  // Update Routing.tsx
-  const routingFileContent = readFileSync(paths.routingFilePath, "utf8");
-  const importStatement = `const ${pageName}Page = lazy(() => import('pages/${pageName}Page'));\n`;
-  const routeStatement = `<Route path={APP_ROUTES.${pageName.toLowerCase()}} element={<LazyLoadPage children={<${pageName}Page />} />} />\n`;
+    // Update Routing.tsx
+    const routingFileContent = readFileSync(paths.routingFilePath, "utf8");
+    const importStatement = `const ${pageName}Page = lazy(() => import('pages/${pageName}Page'));\n`;
+    const routeStatement = `<Route path={APP_ROUTES.${pageName.toLowerCase()}} element={<LazyLoadPage children={<${pageName}Page />} />} />\n`;
 
-  let updatedRoutingFileContent = routingFileContent.replace(
-    /(const Routing = \(\) => {\n)/,
-    `${importStatement}\n$1`
-  );
-
-  // Find all paths that have element and it is not LazyLoadPage
-  const nonLazyLoadPaths = [];
-  const routeRegex = /<Route path={APP_ROUTES\.([^}]+)}/g;
-  let match;
-  while ((match = routeRegex.exec(routingFileContent)) !== null) {
-    if (!match[2]?.includes("LazyLoadPage")) {
-      nonLazyLoadPaths.push(match[1]);
-    }
-  }
-
-  // Get values from APP_ROUTES by the nonLazyLoadPaths
-  const utilsFileContent = readFileSync(paths.utilsFilePath, "utf8");
-  const appRoutesMatch = utilsFileContent
-    .match(/export const APP_ROUTES = {([^}]*)}/)
-    .slice(1)[0]
-    .split("\n");
-  let baseLayoutPath;
-  const layoutsPaths = [];
-  nonLazyLoadPaths.forEach((path) => {
-    const pathOfThePaths = appRoutesMatch.findIndex((route) =>
-      route.includes(`${path}:`)
+    let updatedRoutingFileContent = routingFileContent.replace(
+      /(const Routing = \(\) => {\n)/,
+      `${importStatement}\n$1`
     );
-    if (pathOfThePaths) {
-      const pathValue = appRoutesMatch[pathOfThePaths].match(/"([^"]+)"/)[1];
-      if (pathValue === "/") {
-        baseLayoutPath = path;
-      } else {
-        layoutsPaths.push({ [path]: pathValue });
+
+    // Find all paths that have element and it is not LazyLoadPage
+    const nonLazyLoadPaths = [];
+    const routeRegex = /<Route path={APP_ROUTES\.([^}]+)}/g;
+    let match;
+    while ((match = routeRegex.exec(routingFileContent)) !== null) {
+      if (!match[2]?.includes("LazyLoadPage")) {
+        nonLazyLoadPaths.push(match[1]);
       }
     }
-  });
 
-  const matchingLayout = layoutsPaths.find((layout) => {
-    const layoutPathValue = Object.values(layout ?? {})[0];
-    return options.path.startsWith(layoutPathValue);
-  });
+    // Get values from APP_ROUTES by the nonLazyLoadPaths
+    const appRoutesMatch = utilsFileContent
+      .match(/export const APP_ROUTES = {([^}]*)}/)
+      .slice(1)[0]
+      .split("\n");
+    let baseLayoutPath;
+    const layoutsPaths = [];
+    nonLazyLoadPaths.forEach((path) => {
+      const pathOfThePaths = appRoutesMatch.findIndex((route) =>
+        route.includes(`${path}:`)
+      );
+      if (pathOfThePaths) {
+        const pathValue = appRoutesMatch[pathOfThePaths].match(/"([^"]+)"/)[1];
+        if (pathValue === "/") {
+          baseLayoutPath = path;
+        } else {
+          layoutsPaths.push({ [path]: pathValue });
+        }
+      }
+    });
 
-  const matchingLayoutName = Object.keys(matchingLayout ?? {})[0];
+    const matchingLayout = layoutsPaths.find((layout) => {
+      const layoutPathValue = Object.values(layout ?? {})[0];
+      return options.path.startsWith(layoutPathValue);
+    });
 
-  const layoutMatch = options.path.match(/^\/([^/]+)/);
-  const layoutPath = layoutMatch ? layoutMatch[1] : "base";
-  const layoutRegex = new RegExp(
-    `(<Route path={APP_ROUTES.${
+    const matchingLayoutName = Object.keys(matchingLayout ?? {})[0];
+
+    const layoutMatch = options.path.match(/^\/([^/]+)/);
+    const layoutPath = layoutMatch ? layoutMatch[1] : "base";
+    const layoutRegex = new RegExp(
       matchingLayoutName || baseLayoutPath
-    }} element={<[^>]+>}>\n)`
-  );
+        ? `(<Route path={APP_ROUTES.${
+            matchingLayoutName || baseLayoutPath
+          }} element={<[^>]+>}>\n)`
+        : `(<Routes>\n)`
+    );
 
-  updatedRoutingFileContent = updatedRoutingFileContent.replace(
-    layoutRegex,
-    `$1${routeStatement}`
-  );
+    updatedRoutingFileContent = updatedRoutingFileContent.replace(
+      layoutRegex,
+      `$1${routeStatement}`
+    );
 
-  writeFileSync(paths.routingFilePath, updatedRoutingFileContent, "utf8");
+    writeFileSync(paths.routingFilePath, updatedRoutingFileContent, "utf8");
+  }
 }
