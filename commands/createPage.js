@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join, resolve } from "path";
 import { createDirectoryIfNotExists, writeFile } from "../helpers/index.js";
 import { createModule } from "./createModule.js";
@@ -45,24 +45,43 @@ export default ${pageName}Page;
   // Create the section component using createComponent
   createModule(pageName, { full: true });
 
-  // Update APP_ROUTES in src/utils/index.tsx
+  // Update APP_ROUTES in src/utils/index.ts
   if (options.path) {
-    const utilsFileContent = readFileSync(paths.utilsFilePath, "utf8");
+    let utilsFileContent = existsSync(paths.utilsFilePath)
+      ? readFileSync(paths.utilsFilePath, "utf8")
+      : "";
+
+    if (!utilsFileContent.includes("export const APP_ROUTES")) {
+      utilsFileContent += `
+export const APP_ROUTES = {};
+      `;
+    }
+
     const updatedUtilsFileContent = utilsFileContent.replace(
       /export const APP_ROUTES = {([^}]*)}/,
       (match, routes) => {
         return `export const APP_ROUTES = {
-  ${routes.trim()}${routes.trim()[routes.trim().length - 1] === "," ? "" : ","}
-  ${pageName.toLowerCase()}: "${options.path}"
+  ${routes.trim()}${
+          routes.trim()[routes.trim().length - 1] === "," ||
+          !routes.trim()[routes.trim().length - 1]
+            ? ""
+            : ","
+        }${routes.trim() && "\n"}  ${pageName.toLowerCase()}: "${options.path}"
 }`;
       }
     );
     writeFileSync(paths.utilsFilePath, updatedUtilsFileContent, "utf8");
 
     // Update Routing.tsx
-    const routingFileContent = readFileSync(paths.routingFilePath, "utf8");
+    let routingFileContent = readFileSync(paths.routingFilePath, "utf8");
+
+    // Add import statement for APP_ROUTES if it doesn't exist
+    if (!routingFileContent.includes("import { APP_ROUTES }")) {
+      routingFileContent = `import { APP_ROUTES } from 'utils';\n${routingFileContent}`;
+    }
+
     const importStatement = `const ${pageName}Page = lazy(() => import('pages/${pageName}Page'));\n`;
-    const routeStatement = `<Route path={APP_ROUTES.${pageName.toLowerCase()}} element={<LazyLoadPage children={<${pageName}Page />} />} />\n`;
+    const routeStatement = `      <Route path={APP_ROUTES.${pageName.toLowerCase()}} element={<LazyLoadPage children={<${pageName}Page />} />} />\n`;
 
     let updatedRoutingFileContent = routingFileContent.replace(
       /(const Routing = \(\) => {\n)/,
@@ -119,7 +138,7 @@ export default ${pageName}Page;
 
     updatedRoutingFileContent = updatedRoutingFileContent.replace(
       layoutRegex,
-      `$1${routeStatement}`
+      `$1${(matchingLayoutName || baseLayoutPath) && `  `}${routeStatement}`
     );
 
     writeFileSync(paths.routingFilePath, updatedRoutingFileContent, "utf8");
