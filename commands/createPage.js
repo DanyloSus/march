@@ -8,13 +8,17 @@ import {
 import { createModule } from "./createModule.js";
 
 export function createPage(pageName, options) {
-  const page = capitalizeComponentName(pageName);
+  const pagePath = pageName.split("/").map(capitalizeComponentName).join("/");
+  const page = capitalizeComponentName(pageName.split("/").pop());
 
   const paths = {
     pagesDir: resolve(process.cwd(), "src/pages"),
-    pageFolderPath: join(resolve(process.cwd(), "src/pages"), `${page}Page`),
+    pageFolderPath: join(
+      resolve(process.cwd(), "src/pages"),
+      `${pagePath}Page`
+    ),
     pageFilePath: join(
-      resolve(process.cwd(), "src/pages", `${page}Page`),
+      resolve(process.cwd(), "src/pages", `${pagePath}Page`),
       "index.tsx"
     ),
     utilsFilePath: resolve(process.cwd(), "src/utils/index.ts"),
@@ -30,7 +34,7 @@ export function createPage(pageName, options) {
     pageTemplate: `
 import { FC } from "react";
 
-import { ${page}Section } from "modules/${page}";
+import { ${page}Section } from "modules/${pagePath}";
 
 interface ${page}PageProps {}
 
@@ -46,7 +50,7 @@ export default ${page}Page;
   writeFile(paths.pageFilePath, templates.pageTemplate);
 
   // Create the section component using createComponent
-  createModule(page, { full: true, startComponent: `${page}Section` });
+  createModule(pagePath, { full: true, startComponent: `${page}Section` });
 
   // Update APP_ROUTES in src/utils/index.ts
   if (options.path) {
@@ -64,12 +68,14 @@ export const APP_ROUTES = {};
       /export const APP_ROUTES = {([^}]*)}/,
       (match, routes) => {
         return `export const APP_ROUTES = {
-  ${routes.trim()}${
+${routes.trim()}${
           routes.trim()[routes.trim().length - 1] === "," ||
           !routes.trim()[routes.trim().length - 1]
             ? ""
             : ","
-        }${routes.trim() && "\n"}  ${page.toLowerCase()}: "${options.path}"
+        }${routes.trim() && "\n"}  ${
+          page.charAt(0).toLowerCase() + page.slice(1)
+        }: "${options.path}"
 }`;
       }
     );
@@ -83,8 +89,10 @@ export const APP_ROUTES = {};
       routingFileContent = `import { APP_ROUTES } from 'utils';\n${routingFileContent}`;
     }
 
-    const importStatement = `const ${page}Page = lazy(() => import('pages/${page}Page'));\n`;
-    const routeStatement = `      <Route path={APP_ROUTES.${page.toLowerCase()}} element={<LazyLoadPage children={<${page}Page />} />} />\n`;
+    const importStatement = `const ${page}Page = lazy(() => import('pages/${pagePath}Page'));\n`;
+    const routeStatement = `      <Route path={APP_ROUTES.${
+      page.charAt(0).toLowerCase() + page.slice(1)
+    }} element={<LazyLoadPage children={<${page}Page />} />} />\n`;
 
     let updatedRoutingFileContent = routingFileContent.replace(
       /(const Routing = \(\) => {\n)/,
@@ -141,7 +149,7 @@ export const APP_ROUTES = {};
 
     updatedRoutingFileContent = updatedRoutingFileContent.replace(
       layoutRegex,
-      `$1${(matchingLayoutName || baseLayoutPath) && `  `}${routeStatement}`
+      `$1${matchingLayoutName || baseLayoutPath ? `  ` : ""}${routeStatement}`
     );
 
     writeFileSync(paths.routingFilePath, updatedRoutingFileContent, "utf8");
