@@ -1,13 +1,9 @@
 import { dirname, join, resolve } from "path";
-import { createDirectoryIfNotExists, writeFile } from "../helpers/index.js";
-
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function capitalizeComponentName(componentName) {
-  return componentName.split("/").map(capitalizeFirstLetter).join("/");
-}
+import {
+  capitalizeComponentName,
+  createDirectoryIfNotExists,
+  writeFile,
+} from "../helpers/index.js";
 
 export function createComponent(componentName, options) {
   const moduleName = capitalizeComponentName(options.module);

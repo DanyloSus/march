@@ -1,17 +1,20 @@
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { join, resolve } from "path";
-import { createDirectoryIfNotExists, writeFile } from "../helpers/index.js";
+import {
+  capitalizeComponentName,
+  createDirectoryIfNotExists,
+  writeFile,
+} from "../helpers/index.js";
 import { createModule } from "./createModule.js";
 
 export function createPage(pageName, options) {
+  const page = capitalizeComponentName(pageName);
+
   const paths = {
     pagesDir: resolve(process.cwd(), "src/pages"),
-    pageFolderPath: join(
-      resolve(process.cwd(), "src/pages"),
-      `${pageName}Page`
-    ),
+    pageFolderPath: join(resolve(process.cwd(), "src/pages"), `${page}Page`),
     pageFilePath: join(
-      resolve(process.cwd(), "src/pages", `${pageName}Page`),
+      resolve(process.cwd(), "src/pages", `${page}Page`),
       "index.tsx"
     ),
     utilsFilePath: resolve(process.cwd(), "src/utils/index.ts"),
@@ -27,15 +30,15 @@ export function createPage(pageName, options) {
     pageTemplate: `
 import { FC } from "react";
 
-import { ${pageName}Section } from "modules/${pageName}";
+import { ${page}Section } from "modules/${page}";
 
-interface ${pageName}PageProps {}
+interface ${page}PageProps {}
 
-const ${pageName}Page: FC<${pageName}PageProps> = () => {
-  return <${pageName}Section />;
+const ${page}Page: FC<${page}PageProps> = () => {
+  return <${page}Section />;
 };
 
-export default ${pageName}Page;
+export default ${page}Page;
     `,
   };
 
@@ -43,7 +46,7 @@ export default ${pageName}Page;
   writeFile(paths.pageFilePath, templates.pageTemplate);
 
   // Create the section component using createComponent
-  createModule(pageName, { full: true });
+  createModule(page, { full: true, startComponent: `${page}Section` });
 
   // Update APP_ROUTES in src/utils/index.ts
   if (options.path) {
@@ -66,7 +69,7 @@ export const APP_ROUTES = {};
           !routes.trim()[routes.trim().length - 1]
             ? ""
             : ","
-        }${routes.trim() && "\n"}  ${pageName.toLowerCase()}: "${options.path}"
+        }${routes.trim() && "\n"}  ${page.toLowerCase()}: "${options.path}"
 }`;
       }
     );
@@ -80,8 +83,8 @@ export const APP_ROUTES = {};
       routingFileContent = `import { APP_ROUTES } from 'utils';\n${routingFileContent}`;
     }
 
-    const importStatement = `const ${pageName}Page = lazy(() => import('pages/${pageName}Page'));\n`;
-    const routeStatement = `      <Route path={APP_ROUTES.${pageName.toLowerCase()}} element={<LazyLoadPage children={<${pageName}Page />} />} />\n`;
+    const importStatement = `const ${page}Page = lazy(() => import('pages/${page}Page'));\n`;
+    const routeStatement = `      <Route path={APP_ROUTES.${page.toLowerCase()}} element={<LazyLoadPage children={<${page}Page />} />} />\n`;
 
     let updatedRoutingFileContent = routingFileContent.replace(
       /(const Routing = \(\) => {\n)/,

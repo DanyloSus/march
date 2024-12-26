@@ -1,40 +1,53 @@
 import { join, resolve } from "path";
-import { createDirectoryIfNotExists, writeFile } from "../helpers/index.js";
+import {
+  capitalizeComponentName,
+  createDirectoryIfNotExists,
+  writeFile,
+} from "../helpers/index.js";
 import { createComponent } from "./createComponent.js";
 
 export function createModule(moduleName, options) {
+  const modulePath = moduleName
+    .split("/")
+    .map(capitalizeComponentName)
+    .join("/");
+  const module = capitalizeComponentName(moduleName.split("/").pop());
+  const startComponent = options.startComponent
+    ? capitalizeComponentName(options.startComponent)
+    : module;
+
   const paths = {
     moduleDir: resolve(process.cwd(), "src/modules"),
     moduleDirFolderPath: join(
       resolve(process.cwd(), "src/modules"),
-      moduleName
+      modulePath
     ),
     mainModuleFilePath: join(
-      resolve(process.cwd(), "src/modules", moduleName),
+      resolve(process.cwd(), "src/modules", modulePath),
       "index.ts"
     ),
     apiFolderPath: join(
-      resolve(process.cwd(), "src/modules", moduleName, "api")
+      resolve(process.cwd(), "src/modules", modulePath, "api")
     ),
     apiFilePath: join(
-      resolve(process.cwd(), "src/modules", moduleName, "api"),
-      `${moduleName.charAt(0).toLowerCase() + moduleName.slice(1)}Api.ts`
+      resolve(process.cwd(), "src/modules", modulePath, "api"),
+      `${module.charAt(0).toLowerCase() + module.slice(1)}Api.ts`
     ),
     constantsFolderPath: join(
-      resolve(process.cwd(), "src/modules", moduleName, "constants")
+      resolve(process.cwd(), "src/modules", modulePath, "constants")
     ),
     constantsFilePath: join(
-      resolve(process.cwd(), "src/modules", moduleName, "constants"),
+      resolve(process.cwd(), "src/modules", modulePath, "constants"),
       "index.ts"
     ),
     hooksFolderPath: join(
-      resolve(process.cwd(), "src/modules", moduleName, "hooks")
+      resolve(process.cwd(), "src/modules", modulePath, "hooks")
     ),
     storeFolderPath: join(
-      resolve(process.cwd(), "src/modules", moduleName, "store")
+      resolve(process.cwd(), "src/modules", modulePath, "store")
     ),
     helpersFolderPath: join(
-      resolve(process.cwd(), "src/modules", moduleName, "helpers")
+      resolve(process.cwd(), "src/modules", modulePath, "helpers")
     ),
   };
 
@@ -45,11 +58,11 @@ export function createModule(moduleName, options) {
     apiTemplate: `
 import api from "api/axios";
 
-const ${moduleName.charAt(0).toLowerCase() + moduleName.slice(1)}Api = {
+const ${module.charAt(0).toLowerCase() + module.slice(1)}Api = {
 // write your api
 };
 
-export default ${moduleName.charAt(0).toLowerCase() + moduleName.slice(1)}Api;
+export default ${module.charAt(0).toLowerCase() + module.slice(1)}Api;
     `,
 
     constantsTemplate: `
@@ -57,7 +70,7 @@ export const DUMMY_DATA = "dummy data";
     `,
 
     mainImportTemplate: `
-export { ${moduleName}Section } from "./components/${moduleName}Section";
+export { ${startComponent} } from "./components/${startComponent}";
     `,
   };
 
@@ -73,5 +86,5 @@ export { ${moduleName}Section } from "./components/${moduleName}Section";
   }
   writeFile(paths.mainModuleFilePath, templates.mainImportTemplate);
 
-  createComponent(`${moduleName}Section`, { module: moduleName });
+  createComponent(startComponent, { module: modulePath });
 }

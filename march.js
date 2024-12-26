@@ -36,6 +36,10 @@ program
     "-f, --full",
     "Create a full module without api, constants, hooks, store, and helpers"
   )
+  .option(
+    "-sc, --start-component <startComponent>",
+    "Specify the start component for the module"
+  )
   .action((moduleName, options) => {
     createModule(moduleName, options);
   });
