@@ -94,10 +94,16 @@ ${routes.trim()}${
       page.charAt(0).toLowerCase() + page.slice(1)
     }} element={<LazyLoadPage children={<${page}Page />} />} />\n`;
 
-    let updatedRoutingFileContent = routingFileContent.replace(
-      /(const Routing = \(\) => {\n)/,
-      `${importStatement}\n$1`
-    );
+    if (
+      !routingFileContent.includes(`const ${page}Page = lazy(() => import(`)
+    ) {
+      routingFileContent = routingFileContent.replace(
+        /(const Routing = \(\) => {\n)/,
+        `${importStatement}\n$1`
+      );
+    }
+
+    let updatedRoutingFileContent = routingFileContent;
 
     // Find all paths that have element and it is not LazyLoadPage
     const nonLazyLoadPaths = [];
@@ -147,10 +153,16 @@ ${routes.trim()}${
         : `(<Routes>\n)`
     );
 
-    updatedRoutingFileContent = updatedRoutingFileContent.replace(
-      layoutRegex,
-      `$1${matchingLayoutName || baseLayoutPath ? `  ` : ""}${routeStatement}`
-    );
+    if (
+      !routingFileContent.includes(
+        `element={<LazyLoadPage children={<${page}Page />} />}`
+      )
+    ) {
+      updatedRoutingFileContent = updatedRoutingFileContent.replace(
+        layoutRegex,
+        `$1${matchingLayoutName || baseLayoutPath ? `  ` : ""}${routeStatement}`
+      );
+    }
 
     writeFileSync(paths.routingFilePath, updatedRoutingFileContent, "utf8");
   }
