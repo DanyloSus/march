@@ -12,6 +12,7 @@ program
 
 program
   .command("components <componentName>")
+  .alias("c")
   .description("Create a new React functional component")
   .option(
     "-m, --module <moduleName>",
@@ -23,6 +24,7 @@ program
 
 program
   .command("pages <pageName>")
+  .alias("p")
   .description("Create a new React page")
   .option("-p, --path <path>", "Specify the path for the page")
   .action((pageName, options) => {
@@ -31,6 +33,7 @@ program
 
 program
   .command("modules <moduleName>")
+  .alias("m")
   .description("Create a new module with a page and components")
   .option(
     "-f, --full",
@@ -46,6 +49,7 @@ program
 
 program
   .command("create-project <projectName>")
+  .alias("cp")
   .description("Clone a Git repository from a URL")
   .action(cloneRepo);
 
