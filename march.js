@@ -2,6 +2,7 @@
 
 import { program } from "commander";
 import { createComponent } from "./commands/createComponent.js";
+import { createIcon } from "./commands/createIcon.js";
 import { createModule } from "./commands/createModule.js";
 import { createPage } from "./commands/createPage.js";
 import { cloneRepo } from "./commands/createProject.js";
@@ -52,5 +53,13 @@ program
   .alias("cp")
   .description("Clone a Git repository from a URL")
   .action(cloneRepo);
+
+program
+  .command("icons <iconName>")
+  .alias("i")
+  .description("Create a new icon component")
+  .action((iconName) => {
+    createIcon(iconName);
+  });
 
 program.parse(process.argv);
