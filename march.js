@@ -9,12 +9,12 @@ import { cloneRepo } from "./commands/createProject.js";
 
 program
   .version("1.0.0")
-  .description("March script to create files, folders, and React components");
+  .description("March to easier work with Module ARCHitecture");
 
 program
   .command("components <componentName>")
   .alias("c")
-  .description("Create a new React functional component")
+  .description("Create a new component with its styles")
   .option(
     "-m, --module <moduleName>",
     "Specify the module to create the component in"
@@ -26,8 +26,11 @@ program
 program
   .command("pages <pageName>")
   .alias("p")
-  .description("Create a new React page")
-  .option("-p, --path <path>", "Specify the path for the page")
+  .description("Create a new page with its module and section")
+  .option(
+    "-p, --path <path>",
+    "Specify the path for the page in Router.tsx and APP_ROUTES"
+  )
   .action((pageName, options) => {
     createPage(pageName, options);
   });
@@ -38,7 +41,7 @@ program
   .description("Create a new module with a page and components")
   .option(
     "-f, --full",
-    "Create a full module without api, constants, hooks, store, and helpers"
+    "Create a full module with api, constants, hooks, store, and helpers"
   )
   .option(
     "-sc, --start-component <startComponent>",
@@ -51,13 +54,13 @@ program
 program
   .command("create-project <projectName>")
   .alias("cp")
-  .description("Clone a Git repository from a URL")
+  .description("Create a project from a template")
   .action(cloneRepo);
 
 program
   .command("icons <iconName>")
   .alias("i")
-  .description("Create a new icon component")
+  .description("Create a new icon")
   .action((iconName) => {
     createIcon(iconName);
   });
