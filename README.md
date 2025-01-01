@@ -4,7 +4,9 @@ March Script is a command-line tool designed to help you work with a modular arc
 
 ## Installation
 
-To use the March Script, clone the repository and install the dependencies:
+To use the March Script, install globally package:
+
+`npm i -g march-script`
 
 ## Usage
 
