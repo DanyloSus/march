@@ -18,5 +18,8 @@ export function capitalizeFirstLetter(string) {
 }
 
 export function capitalizeComponentName(componentName) {
-  return componentName.split("/").map(capitalizeFirstLetter).join("/");
+  return (
+    componentName &&
+    componentName.split("/").map(capitalizeFirstLetter).join("/")
+  );
 }
