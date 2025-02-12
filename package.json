@@ -1,9 +1,10 @@
 {
   "name": "march-script",
   "version": "1.0.2",
-  "main": "index.js",
-  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -15,8 +16,11 @@
     "commander": "^12.1.0"
   },
   "bin": {
-    "march": "march.js"
+    "march": "dist/index.js"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DanyloSus/march.git"
@@ -24,5 +28,16 @@
   "bugs": {
     "url": "https://github.com/DanyloSus/march/issues"
   },
-  "homepage": "https://github.com/DanyloSus/march#readme"
+  "homepage": "https://github.com/DanyloSus/march#readme",
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2022",
+    "moduleResolution": "Node",
+    "outDir": "./dist"
+  }
 }

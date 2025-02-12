@@ -6,7 +6,10 @@ import {
 } from "../helpers/index.js";
 import { createComponent } from "./createComponent.js";
 
-export function createModule(moduleName, options) {
+export function createModule(
+  moduleName: string,
+  options: { full?: boolean; startComponent?: string }
+) {
   const modulePath = moduleName
     .split("/")
     .map(capitalizeComponentName)

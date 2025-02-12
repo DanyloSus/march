@@ -5,7 +5,10 @@ import {
   writeFile,
 } from "../helpers/index.js";
 
-export function createComponent(componentName, options) {
+export function createComponent(
+  componentName: string,
+  options: { module?: string }
+) {
   const moduleName = capitalizeComponentName(options.module);
   const capitalizedComponentName = capitalizeComponentName(componentName);
   const baseDir = moduleName

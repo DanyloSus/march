@@ -4,10 +4,10 @@ import {
   capitalizeComponentName,
   createDirectoryIfNotExists,
   writeFile,
-} from "../helpers/index.js";
+} from "../helpers";
 import { createModule } from "./createModule.js";
 
-export function createPage(pageName, options) {
+export function createPage(pageName: string, options: { path?: string }) {
   const pagePath = pageName.split("/").map(capitalizeComponentName).join("/");
   const page = capitalizeComponentName(pageName.split("/").pop());
 
@@ -116,18 +116,21 @@ ${routes.trim()}${
     }
 
     // Get values from APP_ROUTES by the nonLazyLoadPaths
-    const appRoutesMatch = utilsFileContent
-      .match(/export const APP_ROUTES = {([^}]*)}/)
-      .slice(1)[0]
-      .split("\n");
+    const appRoutesMatchResult = utilsFileContent.match(
+      /export const APP_ROUTES = {([^}]*)}/
+    );
+    const appRoutesMatch = appRoutesMatchResult
+      ? appRoutesMatchResult[1].split("\n")
+      : [];
     let baseLayoutPath;
-    const layoutsPaths = [];
+    const layoutsPaths: { [key: string]: string }[] = [];
     nonLazyLoadPaths.forEach((path) => {
       const pathOfThePaths = appRoutesMatch.findIndex((route) =>
         route.includes(`${path}:`)
       );
       if (pathOfThePaths) {
-        const pathValue = appRoutesMatch[pathOfThePaths].match(/"([^"]+)"/)[1];
+        const pathMatch = appRoutesMatch[pathOfThePaths].match(/"([^"]+)"/);
+        const pathValue = pathMatch ? pathMatch[1] : "";
         if (pathValue === "/") {
           baseLayoutPath = path;
         } else {
@@ -138,7 +141,7 @@ ${routes.trim()}${
 
     const matchingLayout = layoutsPaths.find((layout) => {
       const layoutPathValue = Object.values(layout ?? {})[0];
-      return options.path.startsWith(layoutPathValue);
+      return options.path?.startsWith(layoutPathValue);
     });
 
     const matchingLayoutName = Object.keys(matchingLayout ?? {})[0];

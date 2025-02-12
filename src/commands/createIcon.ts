@@ -5,7 +5,7 @@ import {
   writeFile,
 } from "../helpers/index.js";
 
-export function createIcon(iconName) {
+export function createIcon(iconName: string) {
   const capitalizedIconName = `${capitalizeComponentName(iconName)}Icon`;
   const baseDir = resolve(
     process.cwd(),
