@@ -3,7 +3,7 @@ import {
   capitalizeComponentName,
   createDirectoryIfNotExists,
   writeFile,
-} from "../helpers/index.js";
+} from "../helpers";
 import { createComponent } from "./createComponent.js";
 
 export function createModule(
