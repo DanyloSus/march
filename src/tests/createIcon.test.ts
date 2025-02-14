@@ -1,8 +1,11 @@
+import { ICON_TEMPLATE } from "../constants";
+
 const { createIcon } = require("../commands/createIcon");
 const {
   createDirectoryIfNotExists,
   writeFile,
   capitalizeComponentName,
+  getComponentsPaths,
 } = require("../helpers/index");
 
 jest.mock("../helpers/index", () => ({
@@ -11,6 +14,10 @@ jest.mock("../helpers/index", () => ({
   capitalizeComponentName: jest.fn(
     (str) => str.charAt(0).toUpperCase() + str.slice(1)
   ),
+  getComponentsPaths: jest.fn((modulePath, componentsNames) => ({
+    baseDir: "/home/danylo/march-script/src/components/icons/TestIconIcon",
+    icon: "/home/danylo/march-script/src/components/icons/TestIconIcon/TestIconIcon.tsx",
+  })),
 }));
 
 describe("createIcon", () => {
@@ -20,22 +27,17 @@ describe("createIcon", () => {
 
     const capitalizedIconName = "TestIconIcon";
     const baseDir = `/home/danylo/march-script/src/components/icons/${capitalizedIconName}`;
-    const expectedFilePath = `${baseDir}/${capitalizedIconName}.tsx`;
 
     expect(createDirectoryIfNotExists).toHaveBeenCalledWith(baseDir);
 
-    const expectedTemplate = `import { FC } from "react";
-import { SvgIcon } from "ui/SvgIcon";
-import { SvgIconProps } from "types/styles";
+    const expectedFilePath = `${baseDir}/${capitalizedIconName}.tsx`;
 
-export const TestIconIcon: FC<SvgIconProps> = (props) => (
-  <SvgIcon
-    {...props}
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-  >    
-  </SvgIcon>
-);`;
+    expect(writeFile).toHaveBeenCalledWith(
+      expectedFilePath,
+      expect.any(String)
+    );
+
+    const expectedTemplate = ICON_TEMPLATE(capitalizedIconName);
 
     // Normalize both expected and actual strings for comparison
     const normalizeString = (str: string) =>

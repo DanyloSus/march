@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
-import { program } from "commander";
 import { createComponent } from "./commands/createComponent";
 import { createIcon } from "./commands/createIcon";
 import { createModule } from "./commands/createModule";
 import { createPage } from "./commands/createPage";
 import { cloneRepo } from "./commands/createProject";
+
+import { program } from "commander";
 
 program
   .version("1.0.0")
