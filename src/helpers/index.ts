@@ -10,7 +10,6 @@ export function createDirectoryIfNotExists(directoryPath: string) {
 }
 
 export function writeFile(filePath: string, content: string) {
-  console.log({ filePath, content });
   writeFileSync(filePath, content.trim(), "utf8");
   console.log(chalk.green(`File created: ${filePath}`));
 }
