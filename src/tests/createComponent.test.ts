@@ -136,4 +136,120 @@ describe("createComponent", () => {
       STYLES_TEMPLATE
     );
   });
+
+  it("should create a nested component in the specified module", () => {
+    const componentName = "Nested/Component";
+    const options = { module: "testModule" };
+
+    createComponent(componentName, options);
+
+    const moduleName = "TestModule";
+    const capitalizedComponentName = "Nested/Component";
+    const componentFilePaths = {
+      component: `${process.cwd()}/src/modules/${moduleName}/components/${capitalizedComponentName}/index.tsx`,
+      styles: `${process.cwd()}/src/modules/${moduleName}/components/${capitalizedComponentName}/styles.ts`,
+      baseDir: `${process.cwd()}/src/modules/${moduleName}/components/${capitalizedComponentName}`,
+    };
+
+    expect(createDirectoryIfNotExists).toHaveBeenCalledWith(
+      componentFilePaths.baseDir
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.component,
+      expect.any(String)
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.styles,
+      expect.any(String)
+    );
+
+    const expectedComponentTemplate = COMPONENT_TEMPLATE(
+      capitalizedComponentName.split("/").pop()!
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.component,
+      expectedComponentTemplate
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.styles,
+      STYLES_TEMPLATE
+    );
+  });
+
+  it("should create a nested component in the specified nested module", () => {
+    const componentName = "Nested/Component";
+    const options = { module: "testModules/testModule" };
+
+    createComponent(componentName, options);
+
+    const moduleName = "TestModules/TestModule";
+    const capitalizedComponentName = "Nested/Component";
+    const componentFilePaths = {
+      component: `${process.cwd()}/src/modules/${moduleName}/components/${capitalizedComponentName}/index.tsx`,
+      styles: `${process.cwd()}/src/modules/${moduleName}/components/${capitalizedComponentName}/styles.ts`,
+      baseDir: `${process.cwd()}/src/modules/${moduleName}/components/${capitalizedComponentName}`,
+    };
+
+    expect(createDirectoryIfNotExists).toHaveBeenCalledWith(
+      componentFilePaths.baseDir
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.component,
+      expect.any(String)
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.styles,
+      expect.any(String)
+    );
+
+    const expectedComponentTemplate = COMPONENT_TEMPLATE(
+      capitalizedComponentName.split("/").pop()!
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.component,
+      expectedComponentTemplate
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.styles,
+      STYLES_TEMPLATE
+    );
+  });
+
+  it("should create a nested component in the components directory if no module is specified", () => {
+    const componentName = "Nested/Component";
+    const options = {};
+
+    createComponent(componentName, options);
+
+    const capitalizedComponentName = "Nested/Component";
+    const componentFilePaths = {
+      component: `${process.cwd()}/src/components/${capitalizedComponentName}/index.tsx`,
+      styles: `${process.cwd()}/src/components/${capitalizedComponentName}/styles.ts`,
+      baseDir: `${process.cwd()}/src/components/${capitalizedComponentName}`,
+    };
+
+    expect(createDirectoryIfNotExists).toHaveBeenCalledWith(
+      componentFilePaths.baseDir
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.component,
+      expect.any(String)
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.styles,
+      expect.any(String)
+    );
+
+    const expectedComponentTemplate = COMPONENT_TEMPLATE(
+      capitalizedComponentName.split("/").pop()!
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.component,
+      expectedComponentTemplate
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      componentFilePaths.styles,
+      STYLES_TEMPLATE
+    );
+  });
 });
