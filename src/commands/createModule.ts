@@ -1,7 +1,12 @@
-import { join, resolve } from "path";
+import {
+  API_TEMPLATE,
+  CONSTANTS_TEMPLATE,
+  MAIN_IMPORT_TEMPLATE,
+} from "../constants/index.js";
 import {
   capitalizeComponentName,
   createDirectoryIfNotExists,
+  getComponentsPaths,
   writeFile,
 } from "../helpers/index.js";
 import { createComponent } from "./createComponent.js";
@@ -19,75 +24,34 @@ export function createModule(
     ? capitalizeComponentName(options.startComponent)
     : module;
 
-  const paths = {
-    moduleDir: resolve(process.cwd(), "src/modules"),
-    moduleDirFolderPath: join(
-      resolve(process.cwd(), "src/modules"),
-      modulePath
-    ),
-    mainModuleFilePath: join(
-      resolve(process.cwd(), "src/modules", modulePath),
-      "index.ts"
-    ),
-    apiFolderPath: join(
-      resolve(process.cwd(), "src/modules", modulePath, "api")
-    ),
-    apiFilePath: join(
-      resolve(process.cwd(), "src/modules", modulePath, "api"),
-      `${module.charAt(0).toLowerCase() + module.slice(1)}Api.ts`
-    ),
-    constantsFolderPath: join(
-      resolve(process.cwd(), "src/modules", modulePath, "constants")
-    ),
-    constantsFilePath: join(
-      resolve(process.cwd(), "src/modules", modulePath, "constants"),
-      "index.ts"
-    ),
-    hooksFolderPath: join(
-      resolve(process.cwd(), "src/modules", modulePath, "hooks")
-    ),
-    storeFolderPath: join(
-      resolve(process.cwd(), "src/modules", modulePath, "store")
-    ),
-    helpersFolderPath: join(
-      resolve(process.cwd(), "src/modules", modulePath, "helpers")
-    ),
-  };
+  const paths = getComponentsPaths(`src/modules/${modulePath}`, {
+    mainModule: "index.ts",
+    api: `api/${module.charAt(0).toLowerCase() + module.slice(1)}Api.ts`,
+    constants: "constants/index.ts",
+    hooks: "hooks",
+    store: "store",
+    helpers: "helpers",
+  });
 
-  createDirectoryIfNotExists(paths.moduleDir);
-  createDirectoryIfNotExists(paths.moduleDirFolderPath);
+  // Create necessary directories
+  createDirectoryIfNotExists(paths.baseDir);
 
-  const templates = {
-    apiTemplate: `
-import api from "api/axios";
-
-const ${module.charAt(0).toLowerCase() + module.slice(1)}Api = {
-// write your api
-};
-
-export default ${module.charAt(0).toLowerCase() + module.slice(1)}Api;
-    `,
-
-    constantsTemplate: `
-export const DUMMY_DATA = "dummy data";
-    `,
-
-    mainImportTemplate: `
-export { ${startComponent} } from "./components/${startComponent}";
-    `,
-  };
+  // Templates for the files
+  const apiTemplate = API_TEMPLATE(module);
+  const constantsTemplate = CONSTANTS_TEMPLATE;
+  const mainImportTemplate = MAIN_IMPORT_TEMPLATE(startComponent);
 
   if (options?.full) {
-    createDirectoryIfNotExists(paths.apiFolderPath);
-    createDirectoryIfNotExists(paths.constantsFolderPath);
-    createDirectoryIfNotExists(paths.hooksFolderPath);
-    createDirectoryIfNotExists(paths.storeFolderPath);
-    createDirectoryIfNotExists(paths.helpersFolderPath);
+    createDirectoryIfNotExists(paths.api);
+    createDirectoryIfNotExists(paths.constants);
+    createDirectoryIfNotExists(paths.hooks);
+    createDirectoryIfNotExists(paths.store);
+    createDirectoryIfNotExists(paths.helpers);
 
-    writeFile(paths.apiFilePath, templates.apiTemplate);
-    writeFile(paths.constantsFilePath, templates.constantsTemplate);
+    writeFile(paths.api, apiTemplate);
+    writeFile(paths.constants, constantsTemplate);
   }
-  writeFile(paths.mainModuleFilePath, templates.mainImportTemplate);
+  writeFile(paths.mainModule, mainImportTemplate);
 
   createComponent(startComponent, { module: modulePath });
 }

@@ -45,3 +45,21 @@ export const styles: SxStyles = {
     root: { },
 };
 `;
+
+export const API_TEMPLATE = (moduleName: string) => `
+import api from "api/axios";
+
+const ${moduleName.charAt(0).toLowerCase() + moduleName.slice(1)}Api = {
+// write your api
+};
+
+export default ${moduleName.charAt(0).toLowerCase() + moduleName.slice(1)}Api;
+`;
+
+export const CONSTANTS_TEMPLATE = `
+export const DUMMY_DATA = "dummy data";
+`;
+
+export const MAIN_IMPORT_TEMPLATE = (startComponent: string) => `
+export { ${startComponent} } from "./components/${startComponent}";
+`;
