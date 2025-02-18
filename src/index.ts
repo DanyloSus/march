@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import { createComponent } from "./commands/createComponent";
-import { createIcon } from "./commands/createIcon";
-import { createModule } from "./commands/createModule";
-import { createPage } from "./commands/createPage";
-import { cloneRepo } from "./commands/createProject";
+import { createComponent } from "./commands/createComponent.js";
+import { createIcon } from "./commands/createIcon.js";
+import { createModule } from "./commands/createModule.js";
+import { createPage } from "./commands/createPage.js";
+import { cloneRepo } from "./commands/createProject.js";
 
 import { program } from "commander";
 

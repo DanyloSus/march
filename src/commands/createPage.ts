@@ -4,7 +4,7 @@ import {
   capitalizeComponentName,
   createDirectoryIfNotExists,
   writeFile,
-} from "../helpers";
+} from "../helpers/index.js";
 import { createModule } from "./createModule.js";
 
 export function createPage(pageName: string, options: { path?: string }) {

@@ -1,10 +1,10 @@
-import { ICON_TEMPLATE } from "../constants";
+import { ICON_TEMPLATE } from "../constants/index.js";
 import {
   capitalizeComponentName,
   createDirectoryIfNotExists,
   getComponentsPaths,
   writeFile,
-} from "../helpers";
+} from "../helpers/index.js";
 
 export function createIcon(iconName: string) {
   const capitalizedIconName = `${capitalizeComponentName(iconName)}Icon`;

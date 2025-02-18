@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "module": "commonjs",
-    "target": "ES6",
-    "declaration": true,
-    "strict": true,
+    "module": "ESNext",          // Use ESNext to output ESM
+    "target": "ES2020",          // Use a modern target to preserve import/export
+    "moduleResolution": "Node",  // Ensure proper resolution for ESM
+    "outDir": "./dist",          // Output directory
+    "esModuleInterop": true,     // Enables default imports for CommonJS modules
+    "strict": true,              // Optional: Enables strict type-checking
+    "skipLibCheck": true,        // Skips type checking for declaration files
+    "declaration": true,         // Generates declaration (.d.ts) files
+    "sourceMap": true,
+    "preserveSymlinks": true
   },
   "include": ["src/**/*"]
 }

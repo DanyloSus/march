@@ -1,4 +1,4 @@
-import { ICON_TEMPLATE } from "../constants";
+import { ICON_TEMPLATE } from "../constants/index";
 
 import { createIcon } from "../commands/createIcon";
 import {

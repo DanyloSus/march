@@ -7,7 +7,7 @@ import {
   createDirectoryIfNotExists,
   getComponentsPaths,
   writeFile,
-} from "../helpers";
+} from "../helpers/index";
 
 jest.mock("fs");
 jest.mock("chalk", () => ({
