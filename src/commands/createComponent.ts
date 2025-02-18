@@ -1,7 +1,8 @@
-import { dirname, join, resolve } from "path";
+import { COMPONENT_TEMPLATE, STYLES_TEMPLATE } from "../constants/index.js";
 import {
   capitalizeComponentName,
   createDirectoryIfNotExists,
+  getComponentsPaths,
   writeFile,
 } from "../helpers/index.js";
 
@@ -11,56 +12,25 @@ export function createComponent(
 ) {
   const moduleName = capitalizeComponentName(options.module);
   const capitalizedComponentName = capitalizeComponentName(componentName);
-  const baseDir = moduleName
-    ? resolve(process.cwd(), "src/modules", moduleName, "components")
-    : resolve(process.cwd(), "src/components");
-  const componentFolderPath = join(
-    baseDir,
-    dirname(`${capitalizedComponentName}/index`)
+  const componentFilePaths = getComponentsPaths(
+    moduleName
+      ? `src/modules/${moduleName}/components/${capitalizedComponentName}`
+      : `src/components/${capitalizedComponentName}`,
+    {
+      component: "index.tsx",
+      styles: "styles.ts",
+    }
   );
-  const componentFilePath = join(
-    baseDir,
-    capitalizedComponentName,
-    "index.tsx"
-  );
-  const stylesFilePath = join(baseDir, capitalizedComponentName, "styles.ts");
 
   // Create necessary directories
-  createDirectoryIfNotExists(baseDir);
-  createDirectoryIfNotExists(componentFolderPath);
+  createDirectoryIfNotExists(componentFilePaths.baseDir);
 
-  // Templates for the files
-  const componentTemplate = `
-import { FC } from "react";
-
-import { Box } from "ui/Box";
-
-import { styles } from "./styles";
-
-interface ${capitalizedComponentName.split("/").pop()}Props {
-    // Add your props here
-}
-
-export const ${capitalizedComponentName
-    .split("/")
-    .pop()}: FC<${capitalizedComponentName.split("/").pop()}Props> = () => {
-    return (
-        <Box sx={styles.root}>
-          Dummy component
-        </Box>
-    );
-};
-  `;
-
-  const stylesTemplate = `
-import { SxStyles } from "types/styles";
-
-export const styles: SxStyles = {
-    root: { },
-};
-  `;
+  // Template for the component
+  const componentTemplate = COMPONENT_TEMPLATE(
+    capitalizedComponentName.split("/").pop()!
+  );
 
   // Write files
-  writeFile(componentFilePath, componentTemplate);
-  writeFile(stylesFilePath, stylesTemplate);
+  writeFile(componentFilePaths.component, componentTemplate);
+  writeFile(componentFilePaths.styles, STYLES_TEMPLATE);
 }

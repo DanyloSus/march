@@ -17,3 +17,31 @@ export const ${name}: FC<SvgIconProps> = (props) => (
 );
 `;
 };
+
+export const COMPONENT_TEMPLATE = (componentName: string) => `
+import { FC } from "react";
+
+import { Box } from "ui/Box";
+
+import { styles } from "./styles";
+
+interface ${componentName}Props {
+    // Add your props here
+}
+
+export const ${componentName}: FC<${componentName}Props> = () => {
+    return (
+        <Box sx={styles.root}>
+          Dummy component
+        </Box>
+    );
+};
+`;
+
+export const STYLES_TEMPLATE = `
+import { SxStyles } from "types/styles";
+
+export const styles: SxStyles = {
+    root: { },
+};
+`;
