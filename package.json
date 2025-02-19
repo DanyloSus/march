@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc && tsc-alias && npm link",
+    "build": "tsc -w",
     "test": "jest --watch"
   },
   "keywords": [],

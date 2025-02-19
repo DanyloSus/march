@@ -26,8 +26,10 @@ export function createModule(
 
   const paths = getComponentsPaths(`src/modules/${modulePath}`, {
     mainModule: "index.ts",
-    api: `api/${module.charAt(0).toLowerCase() + module.slice(1)}Api.ts`,
-    constants: "constants/index.ts",
+    api: "api",
+    apiFile: `api/${module.charAt(0).toLowerCase() + module.slice(1)}Api.ts`,
+    constants: "constants",
+    constantFile: "constants/index.ts",
     hooks: "hooks",
     store: "store",
     helpers: "helpers",
@@ -48,8 +50,8 @@ export function createModule(
     createDirectoryIfNotExists(paths.store);
     createDirectoryIfNotExists(paths.helpers);
 
-    writeFile(paths.api, apiTemplate);
-    writeFile(paths.constants, constantsTemplate);
+    writeFile(paths.apiFile, apiTemplate);
+    writeFile(paths.constantFile, constantsTemplate);
   }
   writeFile(paths.mainModule, mainImportTemplate);
 

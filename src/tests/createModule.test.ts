@@ -70,8 +70,10 @@ describe("createModule", () => {
     const startComponent = "TestComponent";
     const paths = {
       mainModule: `${process.cwd()}/src/modules/${modulePath}/index.ts`,
-      api: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
-      constants: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
+      api: `${process.cwd()}/src/modules/${modulePath}/api`,
+      apiFile: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
+      constants: `${process.cwd()}/src/modules/${modulePath}/constants`,
+      constantFile: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
       hooks: `${process.cwd()}/src/modules/${modulePath}/hooks`,
       store: `${process.cwd()}/src/modules/${modulePath}/store`,
       helpers: `${process.cwd()}/src/modules/${modulePath}/helpers`,
@@ -98,8 +100,10 @@ describe("createModule", () => {
     const startComponent = "TestComponent";
     const paths = {
       mainModule: `${process.cwd()}/src/modules/${modulePath}/index.ts`,
-      api: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
-      constants: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
+      api: `${process.cwd()}/src/modules/${modulePath}/api`,
+      apiFile: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
+      constants: `${process.cwd()}/src/modules/${modulePath}/constants`,
+      constantFile: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
       hooks: `${process.cwd()}/src/modules/${modulePath}/hooks`,
       store: `${process.cwd()}/src/modules/${modulePath}/store`,
       helpers: `${process.cwd()}/src/modules/${modulePath}/helpers`,
@@ -113,8 +117,14 @@ describe("createModule", () => {
     expect(createDirectoryIfNotExists).toHaveBeenCalledWith(paths.store);
     expect(createDirectoryIfNotExists).toHaveBeenCalledWith(paths.helpers);
 
-    expect(writeFile).toHaveBeenCalledWith(paths.api, API_TEMPLATE(modulePath));
-    expect(writeFile).toHaveBeenCalledWith(paths.constants, CONSTANTS_TEMPLATE);
+    expect(writeFile).toHaveBeenCalledWith(
+      paths.apiFile,
+      API_TEMPLATE(modulePath)
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      paths.constantFile,
+      CONSTANTS_TEMPLATE
+    );
     expect(writeFile).toHaveBeenCalledWith(
       paths.mainModule,
       MAIN_IMPORT_TEMPLATE(startComponent)
@@ -134,8 +144,10 @@ describe("createModule", () => {
     const startComponent = "TestModule";
     const paths = {
       mainModule: `${process.cwd()}/src/modules/${modulePath}/index.ts`,
-      api: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
-      constants: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
+      api: `${process.cwd()}/src/modules/${modulePath}/api`,
+      apiFile: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
+      constants: `${process.cwd()}/src/modules/${modulePath}/constants`,
+      constantFile: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
       hooks: `${process.cwd()}/src/modules/${modulePath}/hooks`,
       store: `${process.cwd()}/src/modules/${modulePath}/store`,
       helpers: `${process.cwd()}/src/modules/${modulePath}/helpers`,
@@ -162,8 +174,10 @@ describe("createModule", () => {
     const startComponent = "TestModule";
     const paths = {
       mainModule: `${process.cwd()}/src/modules/${modulePath}/index.ts`,
-      api: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
-      constants: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
+      api: `${process.cwd()}/src/modules/${modulePath}/api`,
+      apiFile: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
+      constants: `${process.cwd()}/src/modules/${modulePath}/constants`,
+      constantFile: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
       hooks: `${process.cwd()}/src/modules/${modulePath}/hooks`,
       store: `${process.cwd()}/src/modules/${modulePath}/store`,
       helpers: `${process.cwd()}/src/modules/${modulePath}/helpers`,

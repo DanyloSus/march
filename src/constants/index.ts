@@ -63,3 +63,17 @@ export const DUMMY_DATA = "dummy data";
 export const MAIN_IMPORT_TEMPLATE = (startComponent: string) => `
 export { ${startComponent} } from "./components/${startComponent}";
 `;
+
+export const PAGE_TEMPLATE = (page: string, pagePath: string) => `
+import { FC } from "react";
+
+import { ${page}Section } from "modules/${pagePath}";
+
+interface ${page}PageProps {}
+
+const ${page}Page: FC<${page}PageProps> = () => {
+  return <${page}Section />;
+};
+
+export default ${page}Page;
+    `;
