@@ -1,4 +1,5 @@
 import { PAGE_TEMPLATE } from "../constants/index.js";
+import { connectPage } from "../helpers/createPageHelpers.js";
 import {
   capitalizeComponentName,
   createDirectoryIfNotExists,
@@ -23,6 +24,10 @@ export function createPage(pageName: string, options: { path?: string }) {
 
   // Write files
   writeFile(paths.pageFile, pageTemplate);
+
+  if (options.path) {
+    connectPage(page, options.path);
+  }
 
   // Create the section component using createModule
   createModule(pagePath, { full: true, startComponent: `${page}Section` });

@@ -2,6 +2,12 @@ import { createModule } from "../commands/createModule";
 import { createPage } from "../commands/createPage";
 import { createDirectoryIfNotExists, writeFile } from "../helpers/index";
 
+jest.mock("chalk", () => ({
+  __esModule: true,
+  default: {
+    yellow: jest.fn((msg) => msg),
+  },
+}));
 jest.mock("../helpers/index", () => ({
   capitalizeComponentName: jest.fn((str?: string) =>
     str
