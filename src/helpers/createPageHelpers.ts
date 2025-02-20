@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "fs";
 import { getComponentsPaths, writeFile } from "./index.js";
 
-const updateUtils = (
+export const updateUtils = (
   utilsFilePath: string,
   pageName: string,
   pagePath: string
@@ -41,7 +41,7 @@ export const APP_ROUTES = {};
 };
 
 // Update Routing.tsx
-const updateRouting = (
+export const updateRouting = (
   utilsFilePath: string,
   routingFilePath: string,
   pageName: string,
