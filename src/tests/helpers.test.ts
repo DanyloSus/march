@@ -15,6 +15,7 @@ jest.mock("chalk", () => ({
   default: {
     blue: jest.fn((msg) => msg),
     green: jest.fn((msg) => msg),
+    gray: jest.fn((msg) => msg),
   },
 }));
 
@@ -56,7 +57,8 @@ describe("Helpers", () => {
       jest.spyOn(global.console, "log").mockImplementation(() => {});
     });
 
-    it("should write file with trimmed content", () => {
+    it("should create a file with trimmed content if it does not exist", () => {
+      (existsSync as jest.Mock).mockReturnValue(false);
       writeFile("/path/to/file", " content ");
       expect(writeFileSync).toHaveBeenCalledWith(
         "/path/to/file",
@@ -65,6 +67,18 @@ describe("Helpers", () => {
       );
       expect(chalk.green).toHaveBeenCalledWith("File created: /path/to/file");
       expect(console.log).toHaveBeenCalledWith("File created: /path/to/file");
+    });
+
+    it("should update a file with trimmed content if it exists", () => {
+      (existsSync as jest.Mock).mockReturnValue(true);
+      writeFile("/path/to/file", " content ");
+      expect(writeFileSync).toHaveBeenCalledWith(
+        "/path/to/file",
+        "content",
+        "utf8"
+      );
+      expect(chalk.gray).toHaveBeenCalledWith("File updated: /path/to/file");
+      expect(console.log).toHaveBeenCalledWith("File updated: /path/to/file");
     });
   });
 

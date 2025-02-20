@@ -10,8 +10,13 @@ export function createDirectoryIfNotExists(directoryPath: string) {
 }
 
 export function writeFile(filePath: string, content: string) {
-  writeFileSync(filePath, content.trim(), "utf8");
-  console.log(chalk.green(`File created: ${filePath}`));
+  if (existsSync(filePath)) {
+    writeFileSync(filePath, content.trim(), "utf8");
+    console.log(chalk.gray(`File updated: ${filePath}`));
+  } else {
+    writeFileSync(filePath, content.trim(), "utf8");
+    console.log(chalk.green(`File created: ${filePath}`));
+  }
 }
 
 export function capitalizeFirstLetter(string: string) {
