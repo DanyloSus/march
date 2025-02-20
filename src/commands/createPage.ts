@@ -12,8 +12,8 @@ export function createPage(pageName: string, options: { path?: string }) {
   const pagePath = pageName.split("/").map(capitalizeComponentName).join("/");
   const page = capitalizeComponentName(pageName.split("/").pop());
 
-  const paths = getComponentsPaths(`src/pages/${pagePath}`, {
-    pageFile: `${page}Page.tsx`,
+  const paths = getComponentsPaths(`src/pages/${pagePath}Page`, {
+    pageFile: `index.tsx`,
   });
 
   // Create necessary directories
@@ -26,7 +26,7 @@ export function createPage(pageName: string, options: { path?: string }) {
   writeFile(paths.pageFile, pageTemplate);
 
   if (options.path) {
-    connectPage(page, options.path);
+    connectPage(page, options.path, pagePath);
   }
 
   // Create the section component using createModule

@@ -58,23 +58,22 @@ describe("createPage", () => {
   });
 
   it("should create a page without a specified path", () => {
-    const pageName = "TestPage";
+    const pageName = "Test";
     const options = {};
 
     createPage(pageName, options);
 
     const pagePath = "TestPage";
-    const page = "TestPage";
     const paths = {
       baseDir: `${process.cwd()}/src/pages/TestPage`,
-      pageFile: `${process.cwd()}/src/pages/${pagePath}/${page}Page.tsx`,
+      pageFile: `${process.cwd()}/src/pages/${pagePath}/index.tsx`,
     };
 
     expect(createDirectoryIfNotExists).toHaveBeenCalledWith(paths.baseDir);
     expect(writeFile).toHaveBeenCalledWith(paths.pageFile, expect.any(String));
-    expect(createModule).toHaveBeenCalledWith(pagePath, {
+    expect(createModule).toHaveBeenCalledWith(pageName, {
       full: true,
-      startComponent: `${page}Section`,
+      startComponent: `${pageName}Section`,
     });
   });
 });
