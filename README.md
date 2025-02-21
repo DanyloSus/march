@@ -38,11 +38,11 @@ Create a new page with its module and section.
 
 #### Options:
 
-`-p, --path <path>`: Specify the path for the page in Router.tsx and APP_ROUTES.
+`-r, --route <route>`: Specify the route for the page in Router.tsx and APP_ROUTES.
 
 Example:
 
-`march p HomePage -p /home`
+`march p HomePage -r /home`
 
 ### Create Module
 
