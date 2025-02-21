@@ -9,7 +9,7 @@ const APP_ROUTES_DECLARATION = "export const APP_ROUTES = {";
 export const updateUtils = (
   utilsFilePath: string,
   pageName: string,
-  pagePath: string
+  pageRoute: string
 ) => {
   let utilsFileContent = existsSync(utilsFilePath)
     ? readFileSync(utilsFilePath, "utf8")
@@ -20,7 +20,7 @@ export const updateUtils = (
   }
 
   const formattedPageName = formatPageName(pageName);
-  const newRouteEntry = `${formattedPageName}: "${pagePath}"`;
+  const newRouteEntry = `${formattedPageName}: "${pageRoute}"`;
 
   if (!utilsFileContent.includes(newRouteEntry)) {
     utilsFileContent = addRouteToAppRoutes(utilsFileContent, newRouteEntry);

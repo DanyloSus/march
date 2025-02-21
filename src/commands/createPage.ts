@@ -8,7 +8,7 @@ import {
 } from "../helpers/index.js";
 import { createModule } from "./createModule.js";
 
-export function createPage(pageName: string, options: { path?: string }) {
+export function createPage(pageName: string, options: { route?: string }) {
   const pagePath = pageName.split("/").map(capitalizeComponentName).join("/");
   const page = capitalizeComponentName(pageName.split("/").pop());
 
@@ -25,8 +25,8 @@ export function createPage(pageName: string, options: { path?: string }) {
   // Write files
   writeFile(paths.pageFile, pageTemplate);
 
-  if (options.path) {
-    connectPage(page, options.path, pagePath);
+  if (options.route) {
+    connectPage(page, options.route, pagePath);
   }
 
   // Create the section component using createModule

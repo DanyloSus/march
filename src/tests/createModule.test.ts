@@ -60,6 +60,36 @@ describe("createModule", () => {
     jest.clearAllMocks();
   });
 
+  it("should create a module with the default start component", () => {
+    const moduleName = "testModule";
+    const options = {};
+
+    createModule(moduleName, options);
+
+    const modulePath = "TestModule";
+    const startComponent = "TestModule";
+    const paths = {
+      mainModule: `${process.cwd()}/src/modules/${modulePath}/index.ts`,
+      api: `${process.cwd()}/src/modules/${modulePath}/api`,
+      apiFile: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
+      constants: `${process.cwd()}/src/modules/${modulePath}/constants`,
+      constantFile: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
+      hooks: `${process.cwd()}/src/modules/${modulePath}/hooks`,
+      store: `${process.cwd()}/src/modules/${modulePath}/store`,
+      helpers: `${process.cwd()}/src/modules/${modulePath}/helpers`,
+      baseDir: `${process.cwd()}/src/modules/${modulePath}`,
+    };
+
+    expect(createDirectoryIfNotExists).toHaveBeenCalledWith(paths.baseDir);
+    expect(writeFile).toHaveBeenCalledWith(
+      paths.mainModule,
+      MAIN_IMPORT_TEMPLATE(startComponent)
+    );
+    expect(createComponent).toHaveBeenCalledWith(startComponent, {
+      module: modulePath,
+    });
+  });
+
   it("should create a module with the specified start component", () => {
     const moduleName = "testModule";
     const options = { startComponent: "TestComponent" };
@@ -125,36 +155,6 @@ describe("createModule", () => {
       paths.constantFile,
       CONSTANTS_TEMPLATE
     );
-    expect(writeFile).toHaveBeenCalledWith(
-      paths.mainModule,
-      MAIN_IMPORT_TEMPLATE(startComponent)
-    );
-    expect(createComponent).toHaveBeenCalledWith(startComponent, {
-      module: modulePath,
-    });
-  });
-
-  it("should create a module with the default start component if none is specified", () => {
-    const moduleName = "testModule";
-    const options = {};
-
-    createModule(moduleName, options);
-
-    const modulePath = "TestModule";
-    const startComponent = "TestModule";
-    const paths = {
-      mainModule: `${process.cwd()}/src/modules/${modulePath}/index.ts`,
-      api: `${process.cwd()}/src/modules/${modulePath}/api`,
-      apiFile: `${process.cwd()}/src/modules/${modulePath}/api/testModuleApi.ts`,
-      constants: `${process.cwd()}/src/modules/${modulePath}/constants`,
-      constantFile: `${process.cwd()}/src/modules/${modulePath}/constants/index.ts`,
-      hooks: `${process.cwd()}/src/modules/${modulePath}/hooks`,
-      store: `${process.cwd()}/src/modules/${modulePath}/store`,
-      helpers: `${process.cwd()}/src/modules/${modulePath}/helpers`,
-      baseDir: `${process.cwd()}/src/modules/${modulePath}`,
-    };
-
-    expect(createDirectoryIfNotExists).toHaveBeenCalledWith(paths.baseDir);
     expect(writeFile).toHaveBeenCalledWith(
       paths.mainModule,
       MAIN_IMPORT_TEMPLATE(startComponent)

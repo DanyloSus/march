@@ -29,8 +29,8 @@ program
   .alias("p")
   .description("Create a new page with its module and section")
   .option(
-    "-p, --path <path>",
-    "Specify the path for the page in Router.tsx and APP_ROUTES"
+    "-r, --route <route>",
+    "Specify the route for the page in Router.tsx and APP_ROUTES"
   )
   .action((pageName, options) => {
     createPage(pageName, options);
