@@ -7,7 +7,7 @@ const repoHTTPS =
   "https://dsu1@bitbucket.org/empat_tech/react_modular_architecture_template.git";
 
 // Clone repository
-export function cloneRepo(projectName) {
+export function cloneRepo(projectName: string) {
   console.log(chalk.blue(`Cloning repository from ${repoHTTPS}...`));
 
   exec(`git clone ${repoHTTPS} ./${projectName}`, (error, stdout, stderr) => {
