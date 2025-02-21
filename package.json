@@ -1,10 +1,12 @@
 {
   "name": "march-script",
   "version": "1.0.2",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -w",
+    "test": "jest --watch"
   },
   "keywords": [],
   "author": "DanyloSus",
@@ -15,8 +17,11 @@
     "commander": "^12.1.0"
   },
   "bin": {
-    "march": "march.js"
+    "march": "dist/index.js"
   },
+  "files": [
+    "dist/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DanyloSus/march.git"
@@ -24,5 +29,22 @@
   "bugs": {
     "url": "https://github.com/DanyloSus/march/issues"
   },
-  "homepage": "https://github.com/DanyloSus/march#readme"
+  "homepage": "https://github.com/DanyloSus/march#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.26.8",
+    "@babel/preset-typescript": "^7.26.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.13.1",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.7.3"
+  },
+  "compilerOptions": {
+    "module": "ESNext",
+    "target": "ES2022",
+    "moduleResolution": "Node",
+    "outDir": "./dist"
+  }
 }

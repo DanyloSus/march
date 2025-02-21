@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
-import { program } from "commander";
 import { createComponent } from "./commands/createComponent.js";
 import { createIcon } from "./commands/createIcon.js";
 import { createModule } from "./commands/createModule.js";
 import { createPage } from "./commands/createPage.js";
 import { cloneRepo } from "./commands/createProject.js";
+
+import { program } from "commander";
 
 program
   .version("1.0.0")
@@ -28,8 +29,8 @@ program
   .alias("p")
   .description("Create a new page with its module and section")
   .option(
-    "-p, --path <path>",
-    "Specify the path for the page in Router.tsx and APP_ROUTES"
+    "-r, --route <route>",
+    "Specify the route for the page in Router.tsx and APP_ROUTES"
   )
   .action((pageName, options) => {
     createPage(pageName, options);
