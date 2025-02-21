@@ -14,7 +14,8 @@
   "description": "A group of scripts that helps with Module ARCHitecture",
   "dependencies": {
     "chalk": "^5.3.0",
-    "commander": "^12.1.0"
+    "commander": "^12.1.0",
+    "inquirer": "^12.4.2"
   },
   "bin": {
     "march": "dist/index.js"

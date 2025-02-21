@@ -1,6 +1,20 @@
 import chalk from "chalk";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
-import { join, resolve } from "path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import path, { join, resolve } from "path";
+
+export function getProjectType(): "react" | "next" {
+  const configPath = path.resolve(".march/index.json");
+
+  if (!existsSync(configPath)) {
+    console.error(
+      "⚠️ Error: .march/index.json not found. Run `march init` first."
+    );
+    process.exit(1);
+  }
+
+  const config = JSON.parse(readFileSync(configPath, "utf-8"));
+  return config.type === "next" ? "next" : "react";
+}
 
 export function createDirectoryIfNotExists(directoryPath: string) {
   if (!existsSync(directoryPath)) {

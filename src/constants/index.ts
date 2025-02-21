@@ -1,3 +1,5 @@
+import path from "path";
+
 export const ICON_TEMPLATE = (name: string) => {
   return `
 import { FC } from "react";
@@ -64,6 +66,24 @@ export const MAIN_IMPORT_TEMPLATE = (startComponent: string) => `
 export { ${startComponent} } from "./components/${startComponent}";
 `;
 
+export const NEXT_PAGE_TEMPLATE = (page: string, pagePath: string) => `
+import { ${page}Section } from 'modules/${pagePath}';
+
+export function getServerSideProps() {
+  return {
+    props: {},
+  };
+}
+
+const ${page} = () => {
+  return (
+    <${page}Section />
+  );
+};
+
+export default ${page};
+    `;
+
 export const PAGE_TEMPLATE = (page: string, pagePath: string) => `
 import { FC } from "react";
 
@@ -77,3 +97,7 @@ const ${page}Page: FC<${page}PageProps> = () => {
 
 export default ${page}Page;
     `;
+
+export const MARCH_FOLDER = ".march";
+export const INDEX_FILE = path.join(MARCH_FOLDER, "index.json");
+export const TEMPLATES_FOLDER = path.join(MARCH_FOLDER, "templates");

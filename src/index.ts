@@ -7,6 +7,7 @@ import { createPage } from "./commands/createPage.js";
 import { cloneRepo } from "./commands/createProject.js";
 
 import { program } from "commander";
+import { initializeMarch } from "./commands/initializeMarch.js";
 
 program
   .version("1.0.0")
@@ -65,5 +66,10 @@ program
   .action((iconName) => {
     createIcon(iconName);
   });
+
+program
+  .command("init")
+  .description("Initialize the .march folder with project settings")
+  .action(initializeMarch);
 
 program.parse(process.argv);
