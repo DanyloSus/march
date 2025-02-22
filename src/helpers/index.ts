@@ -1,15 +1,13 @@
 import chalk from "chalk";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path, { join, resolve } from "path";
+import { initializeMarch } from "../commands/initializeMarch.js";
 
 export function getProjectType(): "react" | "next" {
   const configPath = path.resolve(".march/index.json");
 
   if (!existsSync(configPath)) {
-    console.error(
-      "⚠️ Error: .march/index.json not found. Run `march init` first."
-    );
-    process.exit(1);
+    initializeMarch();
   }
 
   const config = JSON.parse(readFileSync(configPath, "utf-8"));
