@@ -1,8 +1,3 @@
-export const TEMPLATES = {
-  icon: (name: string) => ICON_TEMPLATE(name),
-  component: (name: string) => COMPONENT_TEMPLATE(name),
-};
-
 export const ICON_TEMPLATE = (name: string) => {
   return `
 import { FC } from "react";
@@ -43,7 +38,7 @@ export const ${componentName}: FC<${componentName}Props> = () => {
 };
 `;
 
-export const STYLES_TEMPLATE = `
+export const STYLE_TEMPLATE = `
 import { SxStyles } from "types/styles";
 
 export const styles: SxStyles = {
@@ -100,3 +95,9 @@ const ${page}Page: FC<${page}PageProps> = () => {
 
 export default ${page}Page;
     `;
+
+export const TEMPLATES = {
+  icon: (name: string) => ICON_TEMPLATE(name),
+  component: (name: string) => COMPONENT_TEMPLATE(name),
+  componentStyle: () => STYLE_TEMPLATE,
+};

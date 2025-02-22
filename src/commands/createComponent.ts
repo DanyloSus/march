@@ -1,4 +1,3 @@
-import { STYLES_TEMPLATE } from "../constants/index.js";
 import {
   capitalizeComponentName,
   createDirectoryIfNotExists,
@@ -32,7 +31,12 @@ export function createComponent(
     formattedName.split("/").pop()!
   );
 
+  const componentStyleTemplate = getTemplateContentWithName(
+    "componentStyle",
+    formattedName.split("/").pop()!
+  );
+
   // Write files
   writeFile(componentFilePaths.component, componentTemplate);
-  writeFile(componentFilePaths.styles, STYLES_TEMPLATE);
+  writeFile(componentFilePaths.styles, componentStyleTemplate);
 }

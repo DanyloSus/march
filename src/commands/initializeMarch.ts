@@ -23,6 +23,7 @@ export function initializeMarch() {
     templates: "templates",
     iconTemplate: "templates/icon.tsx",
     componentTemplate: "templates/component.tsx",
+    componentStyleTemplate: "templates/componentStyle.tsx",
   });
 
   // Read package.json to determine project type
@@ -43,6 +44,7 @@ export function initializeMarch() {
 
   writeFile(paths.iconTemplate, TEMPLATES.icon("NAME"));
   writeFile(paths.componentTemplate, TEMPLATES.component("NAME"));
+  writeFile(paths.componentStyleTemplate, TEMPLATES.componentStyle());
 
   console.log(
     chalk.green(`✅ .march initialized with project type: ${projectType}`)
