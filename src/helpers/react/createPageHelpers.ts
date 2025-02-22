@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from "fs";
-import { getComponentsPaths, writeFile } from "./index.js";
+import { getComponentsPaths, writeFile } from "../index.js";
 
 const APP_ROUTES_DECLARATION = "export const APP_ROUTES = {";
 
