@@ -1,5 +1,6 @@
 export const TEMPLATES = {
   icon: (name: string) => ICON_TEMPLATE(name),
+  component: (name: string) => COMPONENT_TEMPLATE(name),
 };
 
 export const ICON_TEMPLATE = (name: string) => {
