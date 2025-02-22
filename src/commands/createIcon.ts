@@ -1,17 +1,22 @@
-import { ICON_TEMPLATE } from "../constants/index.js";
 import {
   capitalizeComponentName,
   createDirectoryIfNotExists,
+  ensureNameSuffix,
   getComponentsPaths,
+  getTemplateContentWithName,
   writeFile,
 } from "../helpers/index.js";
 
 export function createIcon(iconName: string) {
-  const capitalizedIconName = `${capitalizeComponentName(iconName)}Icon`;
+  let formattedName = ensureNameSuffix(
+    capitalizeComponentName(iconName),
+    "Icon"
+  );
+
   const iconFilePaths = getComponentsPaths(
-    `src/components/icons/${capitalizedIconName}`,
+    `src/components/icons/${formattedName}`,
     {
-      icon: `${capitalizedIconName}.tsx`,
+      icon: `${formattedName}.tsx`,
     }
   );
 
@@ -19,7 +24,7 @@ export function createIcon(iconName: string) {
   createDirectoryIfNotExists(iconFilePaths.baseDir);
 
   // Template for the icon component
-  const iconTemplate = ICON_TEMPLATE(capitalizedIconName);
+  const iconTemplate = getTemplateContentWithName("icon", formattedName);
 
   // Write file
   writeFile(iconFilePaths.icon, iconTemplate);

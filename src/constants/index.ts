@@ -1,4 +1,6 @@
-import path from "path";
+export const TEMPLATES = {
+  icon: (name: string) => ICON_TEMPLATE(name),
+};
 
 export const ICON_TEMPLATE = (name: string) => {
   return `
@@ -8,7 +10,7 @@ import { SvgIcon } from "ui/SvgIcon";
 
 import { SvgIconProps } from "types/styles";
 
-export const ${name}: FC<SvgIconProps> = (props) => (
+export const ${name}Icon: FC<SvgIconProps> = (props) => (
   <SvgIcon
     {...props}
     viewBox="0 0 24 24"
@@ -44,7 +46,7 @@ export const STYLES_TEMPLATE = `
 import { SxStyles } from "types/styles";
 
 export const styles: SxStyles = {
-    root: { },
+    root: {},
 };
 `;
 
@@ -97,7 +99,3 @@ const ${page}Page: FC<${page}PageProps> = () => {
 
 export default ${page}Page;
     `;
-
-export const MARCH_FOLDER = ".march";
-export const INDEX_FILE = path.join(MARCH_FOLDER, "index.json");
-export const TEMPLATES_FOLDER = path.join(MARCH_FOLDER, "templates");

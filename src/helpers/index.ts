@@ -2,6 +2,7 @@ import chalk from "chalk";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path, { join, resolve } from "path";
 import { initializeMarch } from "../commands/initializeMarch.js";
+import { TEMPLATES } from "../constants/index.js";
 
 export function getProjectType(): "react" | "next" {
   const configPath = path.resolve(".march/index.json");
@@ -57,4 +58,24 @@ export function getComponentsPaths(
   paths["baseDir"] = baseDir;
 
   return paths;
+}
+
+export function getTemplateContentWithName(
+  templateName: keyof typeof TEMPLATES,
+  name: string
+) {
+  const templatePath = resolve(
+    process.cwd(),
+    `.march/templates/${templateName}.tsx`
+  );
+
+  if (existsSync(templatePath)) {
+    return readFileSync(templatePath, "utf-8").replace(/NAME/g, name);
+  } else {
+    return TEMPLATES[templateName](name);
+  }
+}
+
+export function ensureNameSuffix(name: string, suffix: string) {
+  return name.endsWith(suffix) ? name : `${name}${suffix}`;
 }

@@ -1,11 +1,12 @@
 import chalk from "chalk";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import path from "path";
+import { TEMPLATES } from "../constants/index.js";
 import {
-  INDEX_FILE,
-  MARCH_FOLDER,
-  TEMPLATES_FOLDER,
-} from "../constants/index.js";
+  createDirectoryIfNotExists,
+  getComponentsPaths,
+  writeFile,
+} from "../helpers/index.js";
 
 export function initializeMarch() {
   const packageJsonPath = path.resolve("package.json");
@@ -17,24 +18,29 @@ export function initializeMarch() {
     process.exit(1);
   }
 
+  const paths = getComponentsPaths(".march", {
+    index: "index.json",
+    templates: "templates",
+    iconTemplate: "templates/icon.tsx",
+  });
+
   // Read package.json to determine project type
   const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
   const isNext = packageJson.dependencies?.next !== undefined;
   const projectType = isNext ? "next" : "react";
 
-  // Create .march folder if not exists
-  if (!existsSync(MARCH_FOLDER)) {
-    mkdirSync(MARCH_FOLDER);
+  if (!existsSync(paths.baseDir)) {
+    createDirectoryIfNotExists(paths.baseDir);
   }
 
-  // Create index.json with project type
   const indexData = { type: projectType };
-  writeFileSync(INDEX_FILE, JSON.stringify(indexData, null, 2), "utf-8");
+  writeFile(paths.index, JSON.stringify(indexData, null, 2));
 
-  // Create templates folder
-  if (!existsSync(TEMPLATES_FOLDER)) {
-    mkdirSync(TEMPLATES_FOLDER);
+  if (!existsSync(paths.templates)) {
+    createDirectoryIfNotExists(paths.templates);
   }
+
+  writeFile(paths.iconTemplate, TEMPLATES.icon("NAME"));
 
   console.log(
     chalk.green(`✅ .march initialized with project type: ${projectType}`)
