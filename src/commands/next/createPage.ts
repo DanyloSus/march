@@ -27,8 +27,6 @@ export async function createPage(
   pageName: string,
   options: { route?: string }
 ) {
-  console.log("wtf");
-
   if (!options.route) {
     options.route = await askForRoute();
   }

@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path from "path";
 import {
@@ -35,5 +36,7 @@ export function initializeMarch() {
     mkdirSync(TEMPLATES_FOLDER);
   }
 
-  console.log(`✅ .march initialized with project type: ${projectType}`);
+  console.log(
+    chalk.green(`✅ .march initialized with project type: ${projectType}`)
+  );
 }
