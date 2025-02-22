@@ -1,11 +1,11 @@
 import chalk from "chalk";
 import { existsSync, readFileSync } from "fs";
+import { writeFile } from "../helpers/index";
 import {
   connectPage,
   updateRouting,
   updateUtils,
-} from "../helpers/createPageHelpers";
-import { writeFile } from "../helpers/index";
+} from "../helpers/react/createPageHelpers.js";
 
 jest.mock("fs");
 jest.mock("chalk", () => ({
