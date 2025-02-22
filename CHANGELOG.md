@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.1] - 2025-02-22
+
+### Features
+
+- General:
+    - Add initializing march folder
+- Page creation:
+    - Add dependency from project type
+    - Add creation pages for `Next`
+
 ## [1.1.0] - 2025-02-21
 
 ### Features
