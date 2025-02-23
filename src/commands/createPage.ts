@@ -1,4 +1,4 @@
-import { capitalizeComponentName, getProjectType } from "../helpers/index.js";
+import { capitalizeComponentPath, getProjectType } from "../helpers/index.js";
 import { createModule } from "./createModule.js";
 import { createPage as createNextPage } from "./next/createPage.js";
 import { createPage as createReactPage } from "./react/createPage.js";
@@ -18,8 +18,8 @@ export async function createPage(
       break;
   }
 
-  const pagePath = pageName.split("/").map(capitalizeComponentName).join("/");
-  const page = capitalizeComponentName(pageName.split("/").pop());
+  const pagePath = pageName.split("/").map(capitalizeComponentPath).join("/");
+  const page = capitalizeComponentPath(pageName.split("/").pop());
 
   createModule(pagePath, { full: true, startComponent: `${page}Section` });
 }

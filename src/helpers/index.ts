@@ -32,16 +32,16 @@ export function writeFile(filePath: string, content: string) {
   }
 }
 
-export function capitalizeFirstLetter(string: string) {
+export function capitalizeFirstLetter(string: string = "") {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function capitalizeComponentName(componentName?: string) {
-  return (
-    (componentName &&
-      componentName.split("/").map(capitalizeFirstLetter).join("/")) ||
-    ""
-  );
+export function capitalizeComponentPath(componentName: string = "") {
+  return componentName.split("/").map(capitalizeFirstLetter).join("/");
+}
+
+export function uncapitalizeFirstLetter(componentName: string = "") {
+  return componentName.charAt(0).toLowerCase() + componentName.slice(1);
 }
 
 export function getComponentsPaths(
@@ -66,7 +66,7 @@ export function getTemplateContentWithName(
 ) {
   const templatePath = resolve(
     process.cwd(),
-    `.march/templates/${templateName}.tsx`
+    `.march/templates/${templateName}`
   );
 
   if (existsSync(templatePath)) {

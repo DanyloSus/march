@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 import { NEXT_PAGE_TEMPLATE } from "../../constants/index.js";
 import {
-  capitalizeComponentName,
+  capitalizeComponentPath,
   createDirectoryIfNotExists,
   getComponentsPaths,
   writeFile,
@@ -35,8 +35,8 @@ export async function createPage(
     ? options.route
     : `/${options.route}`;
 
-  const pagePath = pageName.split("/").map(capitalizeComponentName).join("/");
-  const page = capitalizeComponentName(pageName.split("/").pop());
+  const pagePath = pageName.split("/").map(capitalizeComponentPath).join("/");
+  const page = capitalizeComponentPath(pageName.split("/").pop());
 
   const paths = getComponentsPaths(`src/pages/${route}`, {
     pageFile: `index.tsx`,

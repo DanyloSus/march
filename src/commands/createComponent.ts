@@ -1,5 +1,5 @@
 import {
-  capitalizeComponentName,
+  capitalizeComponentPath,
   createDirectoryIfNotExists,
   getComponentsPaths,
   getTemplateContentWithName,
@@ -10,8 +10,8 @@ export function createComponent(
   componentName: string,
   options: { module?: string }
 ) {
-  const moduleName = capitalizeComponentName(options.module);
-  const formattedName = capitalizeComponentName(componentName);
+  const moduleName = capitalizeComponentPath(options.module);
+  const formattedName = capitalizeComponentPath(componentName);
   const componentFilePaths = getComponentsPaths(
     moduleName
       ? `src/modules/${moduleName}/components/${formattedName}`

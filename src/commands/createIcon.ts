@@ -1,5 +1,5 @@
 import {
-  capitalizeComponentName,
+  capitalizeComponentPath,
   createDirectoryIfNotExists,
   ensureNameSuffix,
   getComponentsPaths,
@@ -9,7 +9,7 @@ import {
 
 export function createIcon(iconName: string) {
   let formattedName = ensureNameSuffix(
-    capitalizeComponentName(iconName),
+    capitalizeComponentPath(iconName),
     "Icon"
   );
 

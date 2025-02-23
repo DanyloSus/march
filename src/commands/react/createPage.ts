@@ -1,6 +1,6 @@
 import { PAGE_TEMPLATE } from "../../constants/index.js";
 import {
-  capitalizeComponentName,
+  capitalizeComponentPath,
   createDirectoryIfNotExists,
   getComponentsPaths,
   writeFile,
@@ -9,8 +9,8 @@ import { connectPage } from "../../helpers/react/createPageHelpers.js";
 import { createModule } from "../createModule.js";
 
 export function createPage(pageName: string, options: { route?: string }) {
-  const pagePath = pageName.split("/").map(capitalizeComponentName).join("/");
-  const page = capitalizeComponentName(pageName.split("/").pop());
+  const pagePath = pageName.split("/").map(capitalizeComponentPath).join("/");
+  const page = capitalizeComponentPath(pageName.split("/").pop());
 
   const paths = getComponentsPaths(`src/pages/${pagePath}Page`, {
     pageFile: `index.tsx`,

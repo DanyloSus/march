@@ -3,7 +3,7 @@ import { COMPONENT_TEMPLATE, STYLE_TEMPLATE } from "../constants/index";
 import { createDirectoryIfNotExists, writeFile } from "../helpers/index";
 
 jest.mock("../helpers/index", () => ({
-  capitalizeComponentName: jest.fn((str?: string) =>
+  capitalizeComponentPath: jest.fn((str?: string) =>
     str
       ? str
           .split("/")

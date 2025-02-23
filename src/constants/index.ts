@@ -49,11 +49,11 @@ export const styles: SxStyles = {
 export const API_TEMPLATE = (moduleName: string) => `
 import api from "api/axios";
 
-const ${moduleName.charAt(0).toLowerCase() + moduleName.slice(1)}Api = {
+const ${moduleName}Api = {
 // write your api
 };
 
-export default ${moduleName.charAt(0).toLowerCase() + moduleName.slice(1)}Api;
+export default ${moduleName}Api;
 `;
 
 export const CONSTANTS_TEMPLATE = `
@@ -100,4 +100,7 @@ export const TEMPLATES = {
   "icon.tsx": (name: string) => ICON_TEMPLATE(name),
   "component.tsx": (name: string) => COMPONENT_TEMPLATE(name),
   "componentStyle.ts": () => STYLE_TEMPLATE,
+  "api.ts": (name: string) => API_TEMPLATE(name),
+  "constants.ts": () => CONSTANTS_TEMPLATE,
+  "mainImport.ts": (name: string) => MAIN_IMPORT_TEMPLATE(name),
 };
