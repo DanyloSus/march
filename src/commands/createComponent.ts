@@ -1,8 +1,8 @@
-import { COMPONENT_TEMPLATE, STYLES_TEMPLATE } from "../constants/index.js";
 import {
-  capitalizeComponentName,
+  capitalizeComponentPath,
   createDirectoryIfNotExists,
   getComponentsPaths,
+  getTemplateContentWithName,
   writeFile,
 } from "../helpers/index.js";
 
@@ -10,12 +10,12 @@ export function createComponent(
   componentName: string,
   options: { module?: string }
 ) {
-  const moduleName = capitalizeComponentName(options.module);
-  const capitalizedComponentName = capitalizeComponentName(componentName);
+  const moduleName = capitalizeComponentPath(options.module);
+  const formattedName = capitalizeComponentPath(componentName);
   const componentFilePaths = getComponentsPaths(
     moduleName
-      ? `src/modules/${moduleName}/components/${capitalizedComponentName}`
-      : `src/components/${capitalizedComponentName}`,
+      ? `src/modules/${moduleName}/components/${formattedName}`
+      : `src/components/${formattedName}`,
     {
       component: "index.tsx",
       styles: "styles.ts",
@@ -26,11 +26,17 @@ export function createComponent(
   createDirectoryIfNotExists(componentFilePaths.baseDir);
 
   // Template for the component
-  const componentTemplate = COMPONENT_TEMPLATE(
-    capitalizedComponentName.split("/").pop()!
+  const componentTemplate = getTemplateContentWithName(
+    "component.tsx",
+    formattedName.split("/").pop()!
+  );
+
+  const componentStyleTemplate = getTemplateContentWithName(
+    "componentStyle.ts",
+    formattedName.split("/").pop()!
   );
 
   // Write files
   writeFile(componentFilePaths.component, componentTemplate);
-  writeFile(componentFilePaths.styles, STYLES_TEMPLATE);
+  writeFile(componentFilePaths.styles, componentStyleTemplate);
 }

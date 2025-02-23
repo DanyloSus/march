@@ -2,6 +2,7 @@ import chalk from "chalk";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path, { join, resolve } from "path";
 import { initializeMarch } from "../commands/initializeMarch.js";
+import { TEMPLATES } from "../constants/index.js";
 
 export function getProjectType(): "react" | "next" {
   const configPath = path.resolve(".march/index.json");
@@ -31,16 +32,16 @@ export function writeFile(filePath: string, content: string) {
   }
 }
 
-export function capitalizeFirstLetter(string: string) {
+export function capitalizeFirstLetter(string: string = "") {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function capitalizeComponentName(componentName?: string) {
-  return (
-    (componentName &&
-      componentName.split("/").map(capitalizeFirstLetter).join("/")) ||
-    ""
-  );
+export function capitalizeComponentPath(componentName: string = "") {
+  return componentName.split("/").map(capitalizeFirstLetter).join("/");
+}
+
+export function uncapitalizeFirstLetter(componentName: string = "") {
+  return componentName.charAt(0).toLowerCase() + componentName.slice(1);
 }
 
 export function getComponentsPaths(
@@ -57,4 +58,29 @@ export function getComponentsPaths(
   paths["baseDir"] = baseDir;
 
   return paths;
+}
+
+export function getTemplateContentWithName(
+  templateName: keyof typeof TEMPLATES,
+  name: string,
+  path: string = ""
+) {
+  const templatePath = resolve(
+    process.cwd(),
+    `.march/templates/${templateName}`
+  );
+
+  if (existsSync(templatePath)) {
+    return readFileSync(templatePath, "utf-8")
+      .replace(/NAME/g, name)
+      .replace(/PATH/g, path);
+  } else {
+    const template = TEMPLATES[templateName];
+
+    return template(name, path);
+  }
+}
+
+export function ensureNameSuffix(name: string, suffix: string) {
+  return name.endsWith(suffix) ? name : `${name}${suffix}`;
 }

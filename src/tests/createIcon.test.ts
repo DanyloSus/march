@@ -6,7 +6,7 @@ import { createDirectoryIfNotExists, writeFile } from "../helpers/index";
 jest.mock("../helpers/index", () => ({
   createDirectoryIfNotExists: jest.fn(),
   writeFile: jest.fn(),
-  capitalizeComponentName: jest.fn(
+  capitalizeComponentPath: jest.fn(
     (str) => str.charAt(0).toUpperCase() + str.slice(1)
   ),
   getComponentsPaths: jest.fn((modulePath, componentsNames) => {

@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.2.0] - 2025-02-23
+
+### Features
+
+- General:
+    - Add initializing templates files and connect them for creation
+- Icon creation:
+    - Add templating for icons from `icon.tsx`
+- Component creation:
+    - Add templating for components from `component.tsx`
+    - Add templating for components' styles from `componentStyle.ts`
+- Module creation:
+    - Add templating for apis from `api.ts`
+    - Add templating for constants from `constants.ts`
+    - Add templating for modules' main import from `mainImport.ts`
+- Page creation:
+    - Add templating for react pages from `reactPage.tsx`
+    - Add templating for next pages from `nextPage.tsx`
+
 ## [1.1.1] - 2025-02-22
 
 ### Features

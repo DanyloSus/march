@@ -1,5 +1,3 @@
-import path from "path";
-
 export const ICON_TEMPLATE = (name: string) => {
   return `
 import { FC } from "react";
@@ -8,7 +6,7 @@ import { SvgIcon } from "ui/SvgIcon";
 
 import { SvgIconProps } from "types/styles";
 
-export const ${name}: FC<SvgIconProps> = (props) => (
+export const ${name}Icon: FC<SvgIconProps> = (props) => (
   <SvgIcon
     {...props}
     viewBox="0 0 24 24"
@@ -40,22 +38,22 @@ export const ${componentName}: FC<${componentName}Props> = () => {
 };
 `;
 
-export const STYLES_TEMPLATE = `
+export const STYLE_TEMPLATE = `
 import { SxStyles } from "types/styles";
 
 export const styles: SxStyles = {
-    root: { },
+    root: {},
 };
 `;
 
 export const API_TEMPLATE = (moduleName: string) => `
 import api from "api/axios";
 
-const ${moduleName.charAt(0).toLowerCase() + moduleName.slice(1)}Api = {
+const ${moduleName}Api = {
 // write your api
 };
 
-export default ${moduleName.charAt(0).toLowerCase() + moduleName.slice(1)}Api;
+export default ${moduleName}Api;
 `;
 
 export const CONSTANTS_TEMPLATE = `
@@ -98,6 +96,15 @@ const ${page}Page: FC<${page}PageProps> = () => {
 export default ${page}Page;
     `;
 
-export const MARCH_FOLDER = ".march";
-export const INDEX_FILE = path.join(MARCH_FOLDER, "index.json");
-export const TEMPLATES_FOLDER = path.join(MARCH_FOLDER, "templates");
+export const TEMPLATES = {
+  "icon.tsx": (name: string) => ICON_TEMPLATE(name),
+  "component.tsx": (name: string) => COMPONENT_TEMPLATE(name),
+  "componentStyle.ts": () => STYLE_TEMPLATE,
+  "api.ts": (name: string) => API_TEMPLATE(name),
+  "constants.ts": () => CONSTANTS_TEMPLATE,
+  "mainImport.ts": (name: string) => MAIN_IMPORT_TEMPLATE(name),
+  "reactPage.tsx": (page: string, pagePath: string) =>
+    PAGE_TEMPLATE(page, pagePath),
+  "nextPage.tsx": (page: string, pagePath: string) =>
+    NEXT_PAGE_TEMPLATE(page, pagePath),
+};

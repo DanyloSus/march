@@ -1,9 +1,9 @@
 import { createComponent } from "../commands/createComponent";
-import { COMPONENT_TEMPLATE, STYLES_TEMPLATE } from "../constants/index";
+import { COMPONENT_TEMPLATE, STYLE_TEMPLATE } from "../constants/index";
 import { createDirectoryIfNotExists, writeFile } from "../helpers/index";
 
 jest.mock("../helpers/index", () => ({
-  capitalizeComponentName: jest.fn((str?: string) =>
+  capitalizeComponentPath: jest.fn((str?: string) =>
     str
       ? str
           .split("/")
@@ -46,7 +46,7 @@ export const ${componentName}: FC<${componentName}Props> = () => {
 };
   `
   ),
-  STYLES_TEMPLATE: `
+  STYLE_TEMPLATE: `
 import { SxStyles } from "types/styles";
 
 export const styles: SxStyles = {
@@ -94,7 +94,7 @@ describe("createComponent", () => {
     );
     expect(writeFile).toHaveBeenCalledWith(
       componentFilePaths.styles,
-      STYLES_TEMPLATE
+      STYLE_TEMPLATE
     );
   });
 
@@ -132,7 +132,7 @@ describe("createComponent", () => {
     );
     expect(writeFile).toHaveBeenCalledWith(
       componentFilePaths.styles,
-      STYLES_TEMPLATE
+      STYLE_TEMPLATE
     );
   });
 
@@ -171,7 +171,7 @@ describe("createComponent", () => {
     );
     expect(writeFile).toHaveBeenCalledWith(
       componentFilePaths.styles,
-      STYLES_TEMPLATE
+      STYLE_TEMPLATE
     );
   });
 
@@ -210,7 +210,7 @@ describe("createComponent", () => {
     );
     expect(writeFile).toHaveBeenCalledWith(
       componentFilePaths.styles,
-      STYLES_TEMPLATE
+      STYLE_TEMPLATE
     );
   });
 });
