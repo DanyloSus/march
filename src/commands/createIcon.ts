@@ -1,20 +1,25 @@
+import { IconsType } from "../constants/types.js";
 import {
   capitalizeComponentPath,
   createDirectoryIfNotExists,
   ensureNameSuffix,
   getComponentsPaths,
+  getProjectSettingsOrDefault,
   getTemplateContentWithName,
   writeFile,
 } from "../helpers/index.js";
 
 export function createIcon(iconName: string) {
+  const iconSettings = getProjectSettingsOrDefault("icons") as IconsType;
+
   let formattedName = ensureNameSuffix(
     capitalizeComponentPath(iconName),
-    "Icon"
+    iconSettings.suffix,
+    iconSettings.addSuffix
   );
 
   const iconFilePaths = getComponentsPaths(
-    `src/components/icons/${formattedName}`,
+    `${iconSettings.baseDirectory}/${formattedName}`,
     {
       icon: `${formattedName}.tsx`,
     }

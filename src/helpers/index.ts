@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import path, { join, resolve } from "path";
 import { initializeMarch } from "../commands/initializeMarch.js";
-import { TEMPLATES } from "../constants/index.js";
+import { MARCH_CONFIG, TEMPLATES } from "../constants/index.js";
 
 export function getProjectType(): "react" | "next" {
   const configPath = path.resolve(".march/index.json");
@@ -81,6 +81,26 @@ export function getTemplateContentWithName(
   }
 }
 
-export function ensureNameSuffix(name: string, suffix: string) {
-  return name.endsWith(suffix) ? name : `${name}${suffix}`;
+export function getProjectSettingsOrDefault(
+  settingObject: keyof typeof MARCH_CONFIG
+) {
+  const configPath = path.resolve(".march/index.json");
+
+  if (!existsSync(configPath)) {
+    initializeMarch();
+  }
+
+  const config: typeof MARCH_CONFIG = JSON.parse(
+    readFileSync(configPath, "utf-8")
+  );
+
+  return config[settingObject];
+}
+
+export function ensureNameSuffix(
+  name: string,
+  suffix: string,
+  doesAddSuffix: boolean = true
+) {
+  return !name.endsWith(suffix) && doesAddSuffix ? `${name}${suffix}` : name;
 }

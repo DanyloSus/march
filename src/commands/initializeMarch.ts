@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { existsSync, readFileSync } from "fs";
 import path from "path";
-import { TEMPLATES } from "../constants/index.js";
+import { MARCH_CONFIG, TEMPLATES } from "../constants/index.js";
 import {
   createDirectoryIfNotExists,
   getComponentsPaths,
@@ -32,8 +32,10 @@ export function initializeMarch() {
     createDirectoryIfNotExists(paths.baseDir);
   }
 
-  const indexData = { type: projectType };
-  writeFile(paths.index, JSON.stringify(indexData, null, 2));
+  const marchConfig = MARCH_CONFIG;
+  marchConfig.type = projectType;
+
+  writeFile(paths.index, JSON.stringify(marchConfig, null, 2));
 
   if (!existsSync(paths.templates)) {
     createDirectoryIfNotExists(paths.templates);

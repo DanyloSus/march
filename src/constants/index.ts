@@ -1,3 +1,5 @@
+import { MarchConfig } from "./types";
+
 export const ICON_TEMPLATE = (name: string) => {
   return `
 import { FC } from "react";
@@ -6,7 +8,7 @@ import { SvgIcon } from "ui/SvgIcon";
 
 import { SvgIconProps } from "types/styles";
 
-export const ${name}Icon: FC<SvgIconProps> = (props) => (
+export const ${name}: FC<SvgIconProps> = (props) => (
   <SvgIcon
     {...props}
     viewBox="0 0 24 24"
@@ -107,4 +109,20 @@ export const TEMPLATES = {
     PAGE_TEMPLATE(page, pagePath),
   "nextPage.tsx": (page: string, pagePath: string) =>
     NEXT_PAGE_TEMPLATE(page, pagePath),
+};
+
+export const MARCH_CONFIG: MarchConfig = {
+  type: "react",
+
+  icons: {
+    baseDirectory: "src/components/icons",
+    suffix: "Icon",
+    addSuffix: true,
+  },
+
+  components: {},
+
+  modules: {},
+
+  pages: {},
 };
