@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
 import { resolve } from "path";
 import {
-  capitalizeComponentName,
+  capitalizeComponentPath,
   capitalizeFirstLetter,
   createDirectoryIfNotExists,
   getComponentsPaths,
@@ -88,13 +88,13 @@ describe("Helpers", () => {
     });
   });
 
-  describe("capitalizeComponentName", () => {
+  describe("capitalizeComponentPath", () => {
     it("should capitalize each part of the component name", () => {
-      expect(capitalizeComponentName("test/component")).toBe("Test/Component");
+      expect(capitalizeComponentPath("test/component")).toBe("Test/Component");
     });
 
     it("should return an empty string if componentName is undefined", () => {
-      expect(capitalizeComponentName()).toBe("");
+      expect(capitalizeComponentPath()).toBe("");
     });
   });
 

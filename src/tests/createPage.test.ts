@@ -9,7 +9,7 @@ jest.mock("chalk", () => ({
   },
 }));
 jest.mock("../helpers/index", () => ({
-  capitalizeComponentName: jest.fn((str?: string) =>
+  capitalizeComponentPath: jest.fn((str?: string) =>
     str
       ? str
           .split("/")
