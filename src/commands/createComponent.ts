@@ -1,7 +1,10 @@
+import { ComponentsInterface } from "../constants/types.js";
 import {
   capitalizeComponentPath,
   createDirectoryIfNotExists,
+  ensureNameSuffix,
   getComponentsPaths,
+  getProjectSettingsOrDefault,
   getTemplateContentWithName,
   writeFile,
 } from "../helpers/index.js";
@@ -10,15 +13,30 @@ export function createComponent(
   componentName: string,
   options: { module?: string }
 ) {
-  const moduleName = capitalizeComponentPath(options.module);
-  const formattedName = capitalizeComponentPath(componentName);
+  const componentSettings = getProjectSettingsOrDefault(
+    "components"
+  ) as ComponentsInterface;
+
+  const moduleName = capitalizeComponentPath(
+    options.module,
+    componentSettings.capitalizePathAndName
+  );
+  const formattedName = ensureNameSuffix(
+    capitalizeComponentPath(
+      componentName,
+      componentSettings.capitalizePathAndName
+    ),
+    componentSettings.suffix,
+    componentSettings.addSuffix
+  );
+
   const componentFilePaths = getComponentsPaths(
     moduleName
       ? `src/modules/${moduleName}/components/${formattedName}`
-      : `src/components/${formattedName}`,
+      : `${componentSettings.baseDirectory}/${formattedName}`,
     {
       component: "index.tsx",
-      styles: "styles.ts",
+      styles: `${componentSettings.stylesFileName}.ts`,
     }
   );
 
@@ -38,5 +56,7 @@ export function createComponent(
 
   // Write files
   writeFile(componentFilePaths.component, componentTemplate);
-  writeFile(componentFilePaths.styles, componentStyleTemplate);
+
+  if (componentSettings.doesCreateStyles)
+    writeFile(componentFilePaths.styles, componentStyleTemplate);
 }

@@ -1,4 +1,4 @@
-import { IconsType } from "../constants/types.js";
+import { IconsInterface } from "../constants/types.js";
 import {
   capitalizeComponentPath,
   createDirectoryIfNotExists,
@@ -10,10 +10,10 @@ import {
 } from "../helpers/index.js";
 
 export function createIcon(iconName: string) {
-  const iconSettings = getProjectSettingsOrDefault("icons") as IconsType;
+  const iconSettings = getProjectSettingsOrDefault("icons") as IconsInterface;
 
   let formattedName = ensureNameSuffix(
-    capitalizeComponentPath(iconName),
+    capitalizeComponentPath(iconName, iconSettings.capitalizePathAndName),
     iconSettings.suffix,
     iconSettings.addSuffix
   );

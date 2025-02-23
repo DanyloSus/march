@@ -36,8 +36,14 @@ export function capitalizeFirstLetter(string: string = "") {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
-export function capitalizeComponentPath(componentName: string = "") {
-  return componentName.split("/").map(capitalizeFirstLetter).join("/");
+export function capitalizeComponentPath(
+  componentName: string = "",
+  doesCapitalize: boolean = true
+) {
+  return componentName
+    .split("/")
+    .map((name) => (doesCapitalize ? capitalizeFirstLetter(name) : name))
+    .join("/");
 }
 
 export function uncapitalizeFirstLetter(componentName: string = "") {

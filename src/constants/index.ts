@@ -118,9 +118,18 @@ export const MARCH_CONFIG: MarchConfig = {
     baseDirectory: "src/components/icons",
     suffix: "Icon",
     addSuffix: true,
+    capitalizePathAndName: true,
   },
 
-  components: {},
+  components: {
+    baseDirectory: "src/components",
+    suffix: "",
+    addSuffix: false,
+    capitalizePathAndName: true,
+
+    doesCreateStyles: true,
+    stylesFileName: "styles",
+  },
 
   modules: {},
 
