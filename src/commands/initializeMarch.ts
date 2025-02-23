@@ -41,7 +41,10 @@ export function initializeMarch() {
 
   (Object.keys(TEMPLATES) as Array<keyof typeof TEMPLATES>).forEach(
     (template) => {
-      writeFile(paths.templates + "/" + template, TEMPLATES[template]("NAME"));
+      writeFile(
+        paths.templates + "/" + template,
+        TEMPLATES[template]("NAME", "PATH")
+      );
     }
   );
 

@@ -62,7 +62,8 @@ export function getComponentsPaths(
 
 export function getTemplateContentWithName(
   templateName: keyof typeof TEMPLATES,
-  name: string
+  name: string,
+  path: string = ""
 ) {
   const templatePath = resolve(
     process.cwd(),
@@ -70,9 +71,13 @@ export function getTemplateContentWithName(
   );
 
   if (existsSync(templatePath)) {
-    return readFileSync(templatePath, "utf-8").replace(/NAME/g, name);
+    return readFileSync(templatePath, "utf-8")
+      .replace(/NAME/g, name)
+      .replace(/PATH/g, path);
   } else {
-    return TEMPLATES[templateName](name);
+    const template = TEMPLATES[templateName];
+
+    return template(name, path);
   }
 }
 

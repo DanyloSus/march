@@ -103,4 +103,8 @@ export const TEMPLATES = {
   "api.ts": (name: string) => API_TEMPLATE(name),
   "constants.ts": () => CONSTANTS_TEMPLATE,
   "mainImport.ts": (name: string) => MAIN_IMPORT_TEMPLATE(name),
+  "reactPage.tsx": (page: string, pagePath: string) =>
+    PAGE_TEMPLATE(page, pagePath),
+  "nextPage.tsx": (page: string, pagePath: string) =>
+    NEXT_PAGE_TEMPLATE(page, pagePath),
 };

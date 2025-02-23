@@ -1,10 +1,10 @@
 import inquirer from "inquirer";
-import { NEXT_PAGE_TEMPLATE } from "../../constants/index.js";
 import {
   capitalizeComponentPath,
   capitalizeFirstLetter,
   createDirectoryIfNotExists,
   getComponentsPaths,
+  getTemplateContentWithName,
   writeFile,
 } from "../../helpers/index.js";
 import { connectPage } from "../../helpers/next/createPageHelpers.js";
@@ -47,7 +47,11 @@ export async function createPage(
   createDirectoryIfNotExists(paths.baseDir);
 
   // Templates for the files
-  const pageTemplate = NEXT_PAGE_TEMPLATE(page, pagePath);
+  const pageTemplate = getTemplateContentWithName(
+    "nextPage.tsx",
+    page,
+    pagePath
+  );
 
   // Write files
   writeFile(paths.pageFile, pageTemplate);
