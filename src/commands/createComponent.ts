@@ -27,12 +27,12 @@ export function createComponent(
 
   // Template for the component
   const componentTemplate = getTemplateContentWithName(
-    "component",
+    "component.tsx",
     formattedName.split("/").pop()!
   );
 
   const componentStyleTemplate = getTemplateContentWithName(
-    "componentStyle",
+    "componentStyle.ts",
     formattedName.split("/").pop()!
   );
 

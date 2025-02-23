@@ -24,7 +24,7 @@ export function createIcon(iconName: string) {
   createDirectoryIfNotExists(iconFilePaths.baseDir);
 
   // Template for the icon component
-  const iconTemplate = getTemplateContentWithName("icon", formattedName);
+  const iconTemplate = getTemplateContentWithName("icon.tsx", formattedName);
 
   // Write file
   writeFile(iconFilePaths.icon, iconTemplate);

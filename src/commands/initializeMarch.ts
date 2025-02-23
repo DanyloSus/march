@@ -21,9 +21,6 @@ export function initializeMarch() {
   const paths = getComponentsPaths(".march", {
     index: "index.json",
     templates: "templates",
-    iconTemplate: "templates/icon.tsx",
-    componentTemplate: "templates/component.tsx",
-    componentStyleTemplate: "templates/componentStyle.tsx",
   });
 
   // Read package.json to determine project type
@@ -42,9 +39,11 @@ export function initializeMarch() {
     createDirectoryIfNotExists(paths.templates);
   }
 
-  writeFile(paths.iconTemplate, TEMPLATES.icon("NAME"));
-  writeFile(paths.componentTemplate, TEMPLATES.component("NAME"));
-  writeFile(paths.componentStyleTemplate, TEMPLATES.componentStyle());
+  (Object.keys(TEMPLATES) as Array<keyof typeof TEMPLATES>).forEach(
+    (template) => {
+      writeFile(paths.templates + "/" + template, TEMPLATES[template]("NAME"));
+    }
+  );
 
   console.log(
     chalk.green(`✅ .march initialized with project type: ${projectType}`)

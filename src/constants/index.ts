@@ -97,7 +97,7 @@ export default ${page}Page;
     `;
 
 export const TEMPLATES = {
-  icon: (name: string) => ICON_TEMPLATE(name),
-  component: (name: string) => COMPONENT_TEMPLATE(name),
-  componentStyle: () => STYLE_TEMPLATE,
+  "icon.tsx": (name: string) => ICON_TEMPLATE(name),
+  "component.tsx": (name: string) => COMPONENT_TEMPLATE(name),
+  "componentStyle.ts": () => STYLE_TEMPLATE,
 };
