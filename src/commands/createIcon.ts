@@ -6,22 +6,26 @@ import {
   getComponentsPaths,
   getProjectSettingsOrDefault,
   getTemplateContentWithName,
+  uncapitalizeFirstLetter,
   writeFile,
 } from "../helpers/index.js";
 
 export function createIcon(iconName: string) {
   const iconSettings = getProjectSettingsOrDefault("icons") as IconsInterface;
 
-  let formattedName = ensureNameSuffix(
+  const formattedPath = ensureNameSuffix(
     capitalizeComponentPath(iconName, iconSettings.capitalizePathAndName),
     iconSettings.suffix,
     iconSettings.addSuffix
   );
 
+  const capitalizeName = formattedPath.split("/").pop() ?? "";
+  const uncapitalizeName = uncapitalizeFirstLetter(capitalizeName);
+
   const iconFilePaths = getComponentsPaths(
-    `${iconSettings.baseDirectory}/${formattedName}`,
+    `${iconSettings.baseDirectory}/${formattedPath}`,
     {
-      icon: `${formattedName}.tsx`,
+      icon: `${capitalizeName}.tsx`,
     }
   );
 
@@ -29,7 +33,12 @@ export function createIcon(iconName: string) {
   createDirectoryIfNotExists(iconFilePaths.baseDir);
 
   // Template for the icon component
-  const iconTemplate = getTemplateContentWithName("icon.tsx", formattedName);
+  const iconTemplate = getTemplateContentWithName({
+    templateName: "icon.tsx",
+    capitalizeName: capitalizeName,
+    uncapitalizeName: uncapitalizeName,
+    path: formattedPath,
+  });
 
   // Write file
   writeFile(iconFilePaths.icon, iconTemplate);

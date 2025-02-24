@@ -32,8 +32,13 @@ export function writeFile(filePath: string, content: string) {
   }
 }
 
-export function capitalizeFirstLetter(string: string = "") {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+export function capitalizeFirstLetter(
+  string: string = "",
+  doesCapitalize: boolean = true
+) {
+  return doesCapitalize
+    ? string.charAt(0).toUpperCase() + string.slice(1)
+    : string;
 }
 
 export function capitalizeComponentPath(
@@ -46,8 +51,13 @@ export function capitalizeComponentPath(
     .join("/");
 }
 
-export function uncapitalizeFirstLetter(componentName: string = "") {
-  return componentName.charAt(0).toLowerCase() + componentName.slice(1);
+export function uncapitalizeFirstLetter(
+  componentName: string = "",
+  doesUncapitalize: boolean = true
+) {
+  return doesUncapitalize
+    ? componentName.charAt(0).toLowerCase() + componentName.slice(1)
+    : componentName;
 }
 
 export function getComponentsPaths(
@@ -66,11 +76,47 @@ export function getComponentsPaths(
   return paths;
 }
 
-export function getTemplateContentWithName(
-  templateName: keyof typeof TEMPLATES,
+export function getTemplateContentWithName({
+  templateName,
+  capitalizeName,
+  uncapitalizeName = "",
+  path = "",
+}: {
+  templateName: keyof typeof TEMPLATES;
+  capitalizeName: string;
+  uncapitalizeName?: string;
+  path?: string;
+}) {
+  const templatePath = resolve(
+    process.cwd(),
+    `.march/templates/${templateName}`
+  );
+
+  if (existsSync(templatePath)) {
+    return readFileSync(templatePath, "utf-8")
+      .replace(/NAME/g, capitalizeName)
+      .replace(/name/g, uncapitalizeName)
+      .replace(/PATH/g, path);
+  } else {
+    const template = TEMPLATES[templateName];
+
+    if (template) {
+      return template(capitalizeName, path);
+    } else {
+      console.log(
+        chalk.red(`Template .march/templates/${templateName} not found`)
+      );
+
+      return "";
+    }
+  }
+}
+
+export const getCustomTemplateContent = (
+  templateName: string,
   name: string,
   path: string = ""
-) {
+) => {
   const templatePath = resolve(
     process.cwd(),
     `.march/templates/${templateName}`
@@ -81,11 +127,13 @@ export function getTemplateContentWithName(
       .replace(/NAME/g, name)
       .replace(/PATH/g, path);
   } else {
-    const template = TEMPLATES[templateName];
+    console.log(
+      chalk.red(`Template .march/templates/${templateName} not found`)
+    );
 
-    return template(name, path);
+    return "";
   }
-}
+};
 
 export function getProjectSettingsOrDefault(
   settingObject: keyof typeof MARCH_CONFIG
@@ -109,4 +157,17 @@ export function ensureNameSuffix(
   doesAddSuffix: boolean = true
 ) {
   return !name.endsWith(suffix) && doesAddSuffix ? `${name}${suffix}` : name;
+}
+
+export function ensurePathSuffixes(
+  path: string,
+  suffix: string,
+  doesAddSuffix: boolean = true
+) {
+  return doesAddSuffix
+    ? path
+        .split("/")
+        .map((pathElement) => ensureNameSuffix(pathElement, suffix))
+        .join("/")
+    : path;
 }
