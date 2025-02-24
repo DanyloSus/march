@@ -47,11 +47,11 @@ export async function createPage(
   createDirectoryIfNotExists(paths.baseDir);
 
   // Templates for the files
-  const pageTemplate = getTemplateContentWithName(
-    "nextPage.tsx",
-    page,
-    pagePath
-  );
+  const pageTemplate = getTemplateContentWithName({
+    templateName: "nextPage.tsx",
+    capitalizeName: page,
+    path: pagePath,
+  });
 
   // Write files
   writeFile(paths.pageFile, pageTemplate);

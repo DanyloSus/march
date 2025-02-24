@@ -21,11 +21,11 @@ export function createPage(pageName: string, options: { route?: string }) {
   createDirectoryIfNotExists(paths.baseDir);
 
   // Templates for the files
-  const pageTemplate = getTemplateContentWithName(
-    "reactPage.tsx",
-    page,
-    pagePath
-  );
+  const pageTemplate = getTemplateContentWithName({
+    templateName: "reactPage.tsx",
+    capitalizeName: page,
+    path: pagePath,
+  });
 
   // Write files
   writeFile(paths.pageFile, pageTemplate);

@@ -112,11 +112,17 @@ export function getTemplateContentWithName({
   }
 }
 
-export const getCustomTemplateContent = (
-  templateName: string,
-  name: string,
-  path: string = ""
-) => {
+export const getCustomTemplateContent = ({
+  templateName,
+  capitalizeName,
+  uncapitalizeName = "",
+  path = "",
+}: {
+  templateName: string;
+  capitalizeName: string;
+  uncapitalizeName?: string;
+  path?: string;
+}) => {
   const templatePath = resolve(
     process.cwd(),
     `.march/templates/${templateName}`
@@ -124,7 +130,8 @@ export const getCustomTemplateContent = (
 
   if (existsSync(templatePath)) {
     return readFileSync(templatePath, "utf-8")
-      .replace(/NAME/g, name)
+      .replace(/NAME/g, capitalizeName)
+      .replace(/name/g, uncapitalizeName)
       .replace(/PATH/g, path);
   } else {
     console.log(

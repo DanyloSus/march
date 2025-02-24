@@ -52,14 +52,14 @@ export function createComponent(
     templateName: "component.tsx",
     capitalizeName: capitalizedName,
     uncapitalizeName: uncapitalizedName,
-    path: "",
+    path: formattedPath,
   });
 
   const componentStyleTemplate = getTemplateContentWithName({
     templateName: "componentStyle.ts",
     capitalizeName: capitalizedName,
     uncapitalizeName: uncapitalizedName,
-    path: "",
+    path: formattedPath,
   });
 
   // Write files

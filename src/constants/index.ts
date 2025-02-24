@@ -131,7 +131,34 @@ export const MARCH_CONFIG: MarchConfig = {
     stylesFileName: "styles",
   },
 
-  modules: {},
+  modules: {
+    baseDirectory: "src/modules",
+    suffix: "",
+    addSuffix: false,
+    capitalizePathAndName: true,
+
+    alwaysCreateFullModules: false,
+
+    defaultElements: {},
+    elementsOnFullCreation: {
+      api: { elementPath: "api" },
+      apiFile: {
+        elementPath: `api/NAMEApi.ts`,
+        elementTemplate: "api.ts",
+      },
+      constants: { elementPath: "constants" },
+      constantFile: {
+        elementPath: "constants/index.ts",
+        elementTemplate: "constants.ts",
+      },
+      hooks: { elementPath: "hooks" },
+      store: { elementPath: "store" },
+      helpers: { elementPath: "helpers" },
+    },
+
+    createMainImport: true,
+    createStartComponent: true,
+  },
 
   pages: {},
 };

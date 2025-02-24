@@ -14,10 +14,25 @@ export interface ComponentsInterface extends DefaultConfigCreation {
   stylesFileName: string;
 }
 
+export interface ModuleElement {
+  elementPath: string;
+  elementTemplate?: string;
+}
+
+export interface ModulesInterface extends DefaultConfigCreation {
+  alwaysCreateFullModules: boolean;
+
+  defaultElements: { [key: string]: ModuleElement };
+  elementsOnFullCreation: { [key: string]: ModuleElement };
+
+  createMainImport: boolean;
+  createStartComponent: boolean;
+}
+
 export interface MarchConfig {
   type: ProjectType;
   icons: IconsInterface;
   components: ComponentsInterface;
-  modules: Record<string, string>;
+  modules: ModulesInterface;
   pages: Record<string, string>;
 }
