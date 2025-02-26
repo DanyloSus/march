@@ -1,5 +1,11 @@
 import { existsSync, readFileSync } from "fs";
-import { getComponentsPaths, writeFile } from "../index.js";
+import { PagesInterface } from "../../constants/types.js";
+import {
+  ensureNamePrefix,
+  getComponentsPaths,
+  getProjectSettingsOrDefault,
+  writeFile,
+} from "../index.js";
 
 const APP_ROUTES_DECLARATION = "export const APP_ROUTES = {";
 
@@ -45,8 +51,8 @@ export const updateRouting = (
   routingFileContent = ensureAppRoutesImport(routingFileContent);
 
   const formattedPageName = formatPageName(pageName);
-  const importStatement = `const ${pageName}Page = lazy(() => import('pages/${pagePath}Page'));\n`;
-  const routeStatement = `      <Route path={APP_ROUTES.${formattedPageName}} element={<LazyLoadPage children={<${pageName}Page />} />} />\n`;
+  const importStatement = `const ${pageName} = lazy(() => import('pages/${pagePath}'));\n`;
+  const routeStatement = `      <Route path={APP_ROUTES.${formattedPageName}} element={<LazyLoadPage children={<${pageName} />} />} />\n`;
 
   routingFileContent = ensureLazyLoadPageImport(
     routingFileContent,
@@ -67,7 +73,7 @@ export const updateRouting = (
 
   if (
     !routingFileContent.includes(
-      `element={<LazyLoadPage children={<${pageName}Page />} />}`
+      `element={<LazyLoadPage children={<${pageName} />} />}`
     )
   ) {
     const layoutRegex = new RegExp(
@@ -93,28 +99,35 @@ export const connectPage = (
   startPageRoute: string,
   pagePath: string
 ) => {
-  const pageRoute = startPageRoute.startsWith("/")
-    ? startPageRoute
-    : `/${startPageRoute}`;
-  const utilsPaths = getComponentsPaths("src/utils", { utilsFile: "index.ts" });
+  const pageSettings = getProjectSettingsOrDefault("pages") as PagesInterface;
+
+  const pageRoute = ensureNamePrefix(startPageRoute, "/");
+
+  const utilsPaths = getComponentsPaths("", {
+    utilsFile: pageSettings.appRoutesDirectory,
+  });
   const utilsFilePath = utilsPaths.utilsFile;
 
-  const utilsFileContent = updateUtils(utilsFilePath, pageName, pageRoute);
-  writeFile(utilsFilePath, utilsFileContent);
+  if (pageSettings.doesAddRouteToAppRoutes) {
+    const utilsFileContent = updateUtils(utilsFilePath, pageName, pageRoute);
+    writeFile(utilsFilePath, utilsFileContent);
+  }
 
-  const routingPaths = getComponentsPaths("src/", {
-    routingFile: "Routing.tsx",
+  const routingPaths = getComponentsPaths("", {
+    routingFile: pageSettings.routingDirectory,
   });
   const routingFilePath = routingPaths.routingFile;
 
-  const routingFileContent = updateRouting(
-    utilsFilePath,
-    routingFilePath,
-    pageName,
-    pageRoute,
-    pagePath
-  );
-  writeFile(routingFilePath, routingFileContent);
+  if (pageSettings.doesAddRouteToRouting) {
+    const routingFileContent = updateRouting(
+      utilsFilePath,
+      routingFilePath,
+      pageName,
+      pageRoute,
+      pagePath
+    );
+    writeFile(routingFilePath, routingFileContent);
+  }
 };
 
 const formatPageName = (pageName: string) => {
@@ -128,7 +141,9 @@ const addRouteToAppRoutes = (content: string, newRouteEntry: string) => {
       const trimmedRoutes = routes.trim();
       return `${APP_ROUTES_DECLARATION}${
         trimmedRoutes
-          ? `\n  ${trimmedRoutes},\n  ${newRouteEntry}`
+          ? `\n  ${trimmedRoutes}${
+              trimmedRoutes.endsWith(",") ? "" : ","
+            }\n  ${newRouteEntry}`
           : `\n  ${newRouteEntry}`
       }\n};`;
     }

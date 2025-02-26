@@ -31,8 +31,12 @@ export function createModule(
   );
 
   const startComponent = options.startComponent
-    ? capitalizeComponentPath(options.startComponent)
+    ? capitalizeComponentPath(
+        options.startComponent,
+        moduleSettings.capitalizePathAndName
+      )
     : capitalizedModuleName;
+  const uncapitalizedStartComponent = uncapitalizeFirstLetter(startComponent);
 
   const moduleElements =
     moduleSettings.alwaysCreateFullModules || options.full
@@ -62,7 +66,7 @@ export function createModule(
     if (moduleElements[element].elementTemplate) {
       const templateContent = getCustomTemplateContent({
         templateName: moduleElements[element].elementTemplate,
-        capitalizeName: capitalizedModuleName,
+        capitalizeName: startComponent,
         uncapitalizeName: uncapitalizedModuleName,
         path: elementPath,
       });
@@ -76,8 +80,8 @@ export function createModule(
   if (moduleSettings.createMainImport) {
     const mainImportTemplate = getTemplateContentWithName({
       templateName: "mainImport.ts",
-      capitalizeName: capitalizedModuleName,
-      uncapitalizeName: uncapitalizedModuleName,
+      capitalizeName: startComponent,
+      uncapitalizeName: uncapitalizedStartComponent,
       path: modulePath,
     });
 

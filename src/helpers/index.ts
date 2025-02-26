@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import inquirer from "inquirer";
 import path, { join, resolve } from "path";
 import { initializeMarch } from "../commands/initializeMarch.js";
 import { MARCH_CONFIG, TEMPLATES } from "../constants/index.js";
@@ -166,6 +167,14 @@ export function ensureNameSuffix(
   return !name.endsWith(suffix) && doesAddSuffix ? `${name}${suffix}` : name;
 }
 
+export function ensureNamePrefix(
+  name: string,
+  prefix: string,
+  doesAddPrefix: boolean = true
+) {
+  return !name.startsWith(prefix) && doesAddPrefix ? `${prefix}${name}` : name;
+}
+
 export function ensurePathSuffixes(
   path: string,
   suffix: string,
@@ -177,4 +186,18 @@ export function ensurePathSuffixes(
         .map((pathElement) => ensureNameSuffix(pathElement, suffix))
         .join("/")
     : path;
+}
+
+export async function askForRoute(): Promise<string> {
+  const answers = await inquirer.prompt([
+    {
+      type: "input",
+      name: "route",
+      message: "Enter the page route (e.g., /dashboard):",
+      validate: (input) =>
+        input.trim() !== "" ? true : "Route cannot be empty",
+    },
+  ]);
+
+  return answers.route;
 }

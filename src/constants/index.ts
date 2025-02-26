@@ -160,5 +160,21 @@ export const MARCH_CONFIG: MarchConfig = {
     createStartComponent: true,
   },
 
-  pages: {},
+  pages: {
+    baseDirectory: "src/pages",
+    suffix: "Page",
+    addSuffix: true,
+    capitalizePathAndName: true,
+
+    doesCreateTheModule: true,
+    doesCreateFullModule: true,
+    addModuleStartComponentSuffix: true,
+    moduleStartComponentSuffix: "Section",
+
+    alwaysAskPageRoute: false,
+    appRoutesDirectory: "src/utils/index.ts",
+    doesAddRouteToAppRoutes: true,
+    routingDirectory: "src/Routing.tsx",
+    doesAddRouteToRouting: true,
+  },
 };
