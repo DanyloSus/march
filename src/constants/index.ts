@@ -143,7 +143,7 @@ export const MARCH_CONFIG: MarchConfig = {
     elementsOnFullCreation: {
       api: { elementPath: "api" },
       apiFile: {
-        elementPath: `api/NAMEApi.ts`,
+        elementPath: `api/nameApi.ts`,
         elementTemplate: "api.ts",
       },
       constants: { elementPath: "constants" },
