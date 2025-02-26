@@ -39,8 +39,6 @@ export function createModule(
       ? moduleSettings.elementsOnFullCreation
       : moduleSettings.defaultElements;
 
-  console.log(moduleElements);
-
   const paths = getComponentsPaths(
     `${moduleSettings.baseDirectory}/${modulePath}`,
     {
