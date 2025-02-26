@@ -35,6 +35,13 @@ export function initializeMarch() {
   const marchConfig = MARCH_CONFIG;
   marchConfig.type = projectType;
 
+  if (projectType === "next") {
+    marchConfig.pages.suffix = "";
+    marchConfig.pages.addSuffix = false;
+    marchConfig.pages.routingDirectory = "";
+    marchConfig.pages.doesAddRouteToRouting = false;
+  }
+
   writeFile(paths.index, JSON.stringify(marchConfig, null, 2));
 
   if (!existsSync(paths.templates)) {
