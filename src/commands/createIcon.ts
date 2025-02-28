@@ -1,6 +1,7 @@
 import { IconsInterface } from "../constants/types.js";
 import {
   capitalizeComponentPath,
+  checkMissingSettings,
   createDirectoryIfNotExists,
   ensureNameSuffix,
   getComponentsPaths,
@@ -12,6 +13,8 @@ import {
 
 export function createIcon(iconName: string) {
   const iconSettings = getProjectSettingsOrDefault("icons") as IconsInterface;
+
+  checkMissingSettings(iconSettings, "icons");
 
   const formattedPath = ensureNameSuffix(
     capitalizeComponentPath(iconName, iconSettings.capitalizePathAndName),

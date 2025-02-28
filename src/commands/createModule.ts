@@ -1,6 +1,7 @@
 import { ModulesInterface } from "../constants/types.js";
 import {
   capitalizeComponentPath,
+  checkMissingSettings,
   createDirectoryIfNotExists,
   ensureNameSuffix,
   getComponentsPaths,
@@ -19,6 +20,8 @@ export function createModule(
   const moduleSettings = getProjectSettingsOrDefault(
     "modules"
   ) as ModulesInterface;
+
+  checkMissingSettings(moduleSettings, "modules");
 
   const modulePath = ensureNameSuffix(
     capitalizeComponentPath(moduleName, moduleSettings.capitalizePathAndName),

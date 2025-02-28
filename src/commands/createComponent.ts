@@ -1,6 +1,7 @@
 import { ComponentsInterface } from "../constants/types.js";
 import {
   capitalizeComponentPath,
+  checkMissingSettings,
   createDirectoryIfNotExists,
   ensureNameSuffix,
   getComponentsPaths,
@@ -17,6 +18,8 @@ export function createComponent(
   const componentSettings = getProjectSettingsOrDefault(
     "components"
   ) as ComponentsInterface;
+
+  checkMissingSettings(componentSettings, "components");
 
   const moduleName = capitalizeComponentPath(
     options.module,

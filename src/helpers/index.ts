@@ -4,6 +4,7 @@ import inquirer from "inquirer";
 import path, { join, resolve } from "path";
 import { initializeMarch } from "../commands/initializeMarch.js";
 import { MARCH_CONFIG, TEMPLATES } from "../constants/index.js";
+import { MarchConfig } from "../constants/types.js";
 
 export function getProjectType(): "react" | "next" {
   const configPath = path.resolve(".march/index.json");
@@ -222,4 +223,28 @@ export function deepMerge<T>(
   }
 
   return result;
+}
+
+export function checkMissingSettings(
+  settings: MarchConfig[keyof MarchConfig],
+  settingsKey: keyof MarchConfig
+) {
+  // Check for missing settings
+  const requiredSettings = Object.keys(MARCH_CONFIG[settingsKey]);
+
+  const missingSettings = requiredSettings.filter(
+    (setting) => settings[setting as keyof typeof settings] === undefined
+  );
+
+  if (missingSettings.length > 0) {
+    console.log(
+      chalk.red(
+        `Missing icon settings: ${missingSettings.join(
+          ", "
+        )}\nRewrite in console march init again`
+      )
+    );
+
+    process.exit(1);
+  }
 }

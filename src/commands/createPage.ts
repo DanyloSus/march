@@ -1,6 +1,7 @@
 import { PagesInterface } from "../constants/types.js";
 import {
   capitalizeComponentPath,
+  checkMissingSettings,
   ensureNameSuffix,
   getProjectSettingsOrDefault,
   getProjectType,
@@ -14,6 +15,8 @@ export async function createPage(
   options: { route?: string } = {}
 ) {
   const pageSettings = getProjectSettingsOrDefault("pages") as PagesInterface;
+
+  checkMissingSettings(pageSettings, "pages");
 
   const projectType = getProjectType();
 
