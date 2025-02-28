@@ -65,14 +65,20 @@ export function initializeMarch() {
     createDirectoryIfNotExists(paths.templates);
   }
 
-  (Object.keys(TEMPLATES) as Array<keyof typeof TEMPLATES>).forEach(
-    (template) => {
-      writeFile(
-        paths.templates + "/" + template,
-        TEMPLATES[template]("NAME", "PATH")
-      );
+  // Create only necessary templates without overwriting existing ones
+  Object.entries(TEMPLATES).forEach(([filename, templateFn]) => {
+    const filePath = path.join(paths.templates, filename);
+
+    // Determine if this template matches the project type or has no prefix
+    const isGeneralTemplate =
+      !filename.startsWith("react") && !filename.startsWith("next");
+    const isCorrectProjectType = filename.startsWith(projectType);
+
+    if ((isGeneralTemplate || isCorrectProjectType) && !existsSync(filePath)) {
+      const content = templateFn("NAME", "PATH"); // Adjust parameters as needed
+      writeFile(filePath, content);
     }
-  );
+  });
 
   console.log(
     chalk.green(`✅ .march initialized with project type: ${projectType}`)
