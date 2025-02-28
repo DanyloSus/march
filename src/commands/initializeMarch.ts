@@ -4,6 +4,7 @@ import path from "path";
 import { MARCH_CONFIG, TEMPLATES } from "../constants/index.js";
 import {
   createDirectoryIfNotExists,
+  deepMerge,
   getComponentsPaths,
   writeFile,
 } from "../helpers/index.js";
@@ -32,17 +33,33 @@ export function initializeMarch() {
     createDirectoryIfNotExists(paths.baseDir);
   }
 
-  const marchConfig = MARCH_CONFIG;
-  marchConfig.type = projectType;
-
-  if (projectType === "next") {
-    marchConfig.pages.suffix = "";
-    marchConfig.pages.addSuffix = false;
-    marchConfig.pages.routingDirectory = "";
-    marchConfig.pages.doesAddRouteToRouting = false;
+  // Load existing config if it exists
+  let existingConfig: Partial<typeof MARCH_CONFIG> = {};
+  if (existsSync(paths.index)) {
+    try {
+      existingConfig = JSON.parse(readFileSync(paths.index, "utf-8"));
+    } catch (error) {
+      console.error(chalk.red("⚠️ Error reading index.json, using defaults."));
+    }
   }
 
-  writeFile(paths.index, JSON.stringify(marchConfig, null, 2));
+  // Merge configurations while ignoring specific fields
+  const mergedConfig = deepMerge(MARCH_CONFIG, existingConfig, [
+    "defaultElements",
+    "elementsOnFullCreation",
+  ]);
+
+  // Override project type (React/Next.js)
+  mergedConfig.type = projectType;
+
+  if (projectType === "next" && !Object.keys(existingConfig).length) {
+    mergedConfig.pages.suffix = "";
+    mergedConfig.pages.addSuffix = false;
+    mergedConfig.pages.routingDirectory = "";
+    mergedConfig.pages.doesAddRouteToRouting = false;
+  }
+
+  writeFile(paths.index, JSON.stringify(mergedConfig, null, 2));
 
   if (!existsSync(paths.templates)) {
     createDirectoryIfNotExists(paths.templates);

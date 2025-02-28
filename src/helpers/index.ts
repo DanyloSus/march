@@ -201,3 +201,25 @@ export async function askForRoute(): Promise<string> {
 
   return answers.route;
 }
+
+export function deepMerge<T>(
+  source: T,
+  target: Partial<T>,
+  ignoreKeys: string[] = []
+): T {
+  if (typeof source !== "object" || source === null) return source;
+
+  const result: any = Array.isArray(source) ? [...source] : { ...source };
+
+  for (const key in source) {
+    if (ignoreKeys.includes(key)) {
+      result[key] = target[key] ?? source[key];
+    } else if (target[key] && typeof target[key] === "object") {
+      result[key] = deepMerge(source[key], target[key], ignoreKeys);
+    } else if (target[key] !== undefined) {
+      result[key] = target[key];
+    }
+  }
+
+  return result;
+}
