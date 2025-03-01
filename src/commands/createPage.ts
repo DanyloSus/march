@@ -29,10 +29,10 @@ export async function createPage(
 
   switch (projectType) {
     case "react":
-      await createReactPage(pageName, options);
+      await createReactPage(pagePath, options);
       break;
     case "next":
-      await createNextPage(pageName, options);
+      await createNextPage(pagePath, options);
       break;
   }
 

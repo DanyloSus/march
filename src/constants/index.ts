@@ -51,11 +51,11 @@ export const styles: SxStyles = {
 export const API_TEMPLATE = (moduleName: string) => `
 import api from "api/axios";
 
-const ${moduleName}Api = {
+const nameApi = {
 // write your api
 };
 
-export default ${moduleName}Api;
+export default nameApi;
 `;
 
 export const CONSTANTS_TEMPLATE = `

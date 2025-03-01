@@ -95,15 +95,17 @@ export function getTemplateContentWithName({
   );
 
   if (existsSync(templatePath)) {
-    return readFileSync(templatePath, "utf-8")
-      .replace(/NAME/g, capitalizeName)
-      .replace(/name/g, uncapitalizeName)
-      .replace(/PATH/g, path);
+    return stripTsNocheck(
+      readFileSync(templatePath, "utf-8")
+        .replace(/NAME/g, capitalizeName)
+        .replace(/name/g, uncapitalizeName)
+        .replace(/PATH/g, path)
+    );
   } else {
     const template = TEMPLATES[templateName];
 
     if (template) {
-      return template(capitalizeName, path);
+      return stripTsNocheck(template(capitalizeName, path));
     } else {
       console.log(
         chalk.red(`Template .march/templates/${templateName} not found`)
@@ -131,10 +133,12 @@ export const getCustomTemplateContent = ({
   );
 
   if (existsSync(templatePath)) {
-    return readFileSync(templatePath, "utf-8")
-      .replace(/NAME/g, capitalizeName)
-      .replace(/name/g, uncapitalizeName)
-      .replace(/PATH/g, path);
+    return stripTsNocheck(
+      readFileSync(templatePath, "utf-8")
+        .replace(/NAME/g, capitalizeName)
+        .replace(/name/g, uncapitalizeName)
+        .replace(/PATH/g, path)
+    );
   } else {
     console.log(
       chalk.red(`Template .march/templates/${templateName} not found`)
@@ -247,4 +251,12 @@ export function checkMissingSettings(
 
     process.exit(1);
   }
+}
+
+export function addTsNocheck(content: string): string {
+  return `// @ts-nocheck\n${content}`;
+}
+
+export function stripTsNocheck(content: string): string {
+  return content.replace(/\/\/ @ts-nocheck\s*\n/, "");
 }

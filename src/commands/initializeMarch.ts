@@ -3,6 +3,7 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { MARCH_CONFIG, TEMPLATES } from "../constants/index.js";
 import {
+  addTsNocheck,
   createDirectoryIfNotExists,
   deepMerge,
   getComponentsPaths,
@@ -75,7 +76,7 @@ export function initializeMarch() {
     const isCorrectProjectType = filename.startsWith(projectType);
 
     if ((isGeneralTemplate || isCorrectProjectType) && !existsSync(filePath)) {
-      const content = templateFn("NAME", "PATH"); // Adjust parameters as needed
+      const content = addTsNocheck(templateFn("NAME", "PATH")); // Adjust parameters as needed
       writeFile(filePath, content);
     }
   });
