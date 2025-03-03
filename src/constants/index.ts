@@ -1,3 +1,5 @@
+import { MarchConfig } from "./types";
+
 export const ICON_TEMPLATE = (name: string) => {
   return `
 import { FC } from "react";
@@ -6,7 +8,7 @@ import { SvgIcon } from "ui/SvgIcon";
 
 import { SvgIconProps } from "types/styles";
 
-export const ${name}Icon: FC<SvgIconProps> = (props) => (
+export const ${name}: FC<SvgIconProps> = (props) => (
   <SvgIcon
     {...props}
     viewBox="0 0 24 24"
@@ -49,11 +51,11 @@ export const styles: SxStyles = {
 export const API_TEMPLATE = (moduleName: string) => `
 import api from "api/axios";
 
-const ${moduleName}Api = {
+const nameApi = {
 // write your api
 };
 
-export default ${moduleName}Api;
+export default nameApi;
 `;
 
 export const CONSTANTS_TEMPLATE = `
@@ -107,4 +109,74 @@ export const TEMPLATES = {
     PAGE_TEMPLATE(page, pagePath),
   "nextPage.tsx": (page: string, pagePath: string) =>
     NEXT_PAGE_TEMPLATE(page, pagePath),
+};
+
+export const MARCH_CONFIG: MarchConfig = {
+  type: "react",
+
+  icons: {
+    baseDirectory: "src/components/icons",
+    suffix: "Icon",
+    addSuffix: true,
+    capitalizePathAndName: true,
+  },
+
+  components: {
+    baseDirectory: "src/components",
+    suffix: "",
+    addSuffix: false,
+    capitalizePathAndName: true,
+
+    doesCreateStyles: true,
+    stylesFileName: "styles",
+  },
+
+  modules: {
+    baseDirectory: "src/modules",
+    suffix: "",
+    addSuffix: false,
+    capitalizePathAndName: true,
+
+    alwaysCreateFullModules: false,
+
+    defaultElements: {},
+    elementsOnFullCreation: {
+      api: { elementPath: "api" },
+      apiFile: {
+        elementPath: `api/nameApi.ts`,
+        elementTemplate: "api.ts",
+      },
+      constants: { elementPath: "constants" },
+      constantFile: {
+        elementPath: "constants/index.ts",
+        elementTemplate: "constants.ts",
+      },
+      hooks: { elementPath: "hooks" },
+      store: { elementPath: "store" },
+      helpers: { elementPath: "helpers" },
+    },
+
+    createMainImport: true,
+    createStartComponent: true,
+  },
+
+  pages: {
+    baseDirectory: "src/pages",
+    suffix: "Page",
+    addSuffix: true,
+    capitalizePathAndName: true,
+
+    doesCreateTheModule: true,
+    doesCreateFullModule: true,
+    addModuleStartComponentSuffix: true,
+    moduleStartComponentSuffix: "Section",
+
+    alwaysAskPageRoute: false,
+    appRoutesDirectory: "src/utils/index.ts",
+    doesAddRouteToAppRoutes: true,
+    routingDirectory: "src/Routing.tsx",
+    doesAddRouteToRouting: true,
+
+    hasPageStyles: false,
+  },
 };

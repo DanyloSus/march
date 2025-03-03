@@ -1,8 +1,12 @@
+import { ModulesInterface } from "../constants/types.js";
 import {
   capitalizeComponentPath,
-  capitalizeFirstLetter,
+  checkMissingSettings,
   createDirectoryIfNotExists,
+  ensureNameSuffix,
   getComponentsPaths,
+  getCustomTemplateContent,
+  getProjectSettingsOrDefault,
   getTemplateContentWithName,
   uncapitalizeFirstLetter,
   writeFile,
@@ -13,56 +17,80 @@ export function createModule(
   moduleName: string,
   options: { full?: boolean; startComponent?: string }
 ) {
-  const modulePath = capitalizeComponentPath(moduleName);
-  const capitalizedModuleName = capitalizeFirstLetter(
-    moduleName.split("/").pop()
-  );
-  const uncapitalizedModuleName = uncapitalizeFirstLetter(
-    moduleName.split("/").pop()
-  );
-  const startComponent = options.startComponent
-    ? capitalizeComponentPath(options.startComponent)
-    : capitalizedModuleName;
+  const moduleSettings = getProjectSettingsOrDefault(
+    "modules"
+  ) as ModulesInterface;
 
-  const paths = getComponentsPaths(`src/modules/${modulePath}`, {
-    mainModule: "index.ts",
-    api: "api",
-    apiFile: `api/${uncapitalizedModuleName}Api.ts`,
-    constants: "constants",
-    constantFile: "constants/index.ts",
-    hooks: "hooks",
-    store: "store",
-    helpers: "helpers",
-  });
+  checkMissingSettings(moduleSettings, "modules");
+
+  const modulePath = ensureNameSuffix(
+    capitalizeComponentPath(moduleName, moduleSettings.capitalizePathAndName),
+    moduleSettings.suffix,
+    moduleSettings.addSuffix
+  );
+  const capitalizedModuleName = moduleName.split("/").pop() ?? "";
+  const uncapitalizedModuleName = uncapitalizeFirstLetter(
+    capitalizedModuleName
+  );
+
+  const startComponent = options.startComponent
+    ? capitalizeComponentPath(
+        options.startComponent,
+        moduleSettings.capitalizePathAndName
+      )
+    : capitalizedModuleName;
+  const uncapitalizedStartComponent = uncapitalizeFirstLetter(startComponent);
+
+  const moduleElements =
+    moduleSettings.alwaysCreateFullModules || options.full
+      ? moduleSettings.elementsOnFullCreation
+      : moduleSettings.defaultElements;
+
+  const paths = getComponentsPaths(
+    `${moduleSettings.baseDirectory}/${modulePath}`,
+    {
+      mainModule: `index.ts`,
+
+      ...Object.keys(moduleElements).reduce((acc, element) => {
+        acc[element] = moduleElements[element].elementPath
+          .replace(/NAME/g, capitalizedModuleName)
+          .replace(/name/g, uncapitalizedModuleName);
+        return acc;
+      }, {} as Record<string, string>),
+    }
+  );
 
   // Create necessary directories
   createDirectoryIfNotExists(paths.baseDir);
 
-  // Templates for the files
-  const apiTemplate = getTemplateContentWithName(
-    "api.ts",
-    uncapitalizedModuleName
-  );
-  const constantsTemplate = getTemplateContentWithName(
-    "constants.ts",
-    capitalizedModuleName
-  );
-  const mainImportTemplate = getTemplateContentWithName(
-    "mainImport.ts",
-    startComponent
-  );
+  Object.keys(moduleElements).forEach((element) => {
+    const elementPath = paths[element];
 
-  if (options?.full) {
-    createDirectoryIfNotExists(paths.api);
-    createDirectoryIfNotExists(paths.constants);
-    createDirectoryIfNotExists(paths.hooks);
-    createDirectoryIfNotExists(paths.store);
-    createDirectoryIfNotExists(paths.helpers);
+    if (moduleElements[element].elementTemplate) {
+      const templateContent = getCustomTemplateContent({
+        templateName: moduleElements[element].elementTemplate,
+        capitalizeName: startComponent,
+        uncapitalizeName: uncapitalizedModuleName,
+        path: elementPath,
+      });
 
-    writeFile(paths.apiFile, apiTemplate);
-    writeFile(paths.constantFile, constantsTemplate);
+      writeFile(elementPath, templateContent);
+    } else {
+      createDirectoryIfNotExists(elementPath);
+    }
+  });
+
+  if (moduleSettings.createMainImport) {
+    const mainImportTemplate = getTemplateContentWithName({
+      templateName: "mainImport.ts",
+      capitalizeName: startComponent,
+      uncapitalizeName: uncapitalizedStartComponent,
+      path: modulePath,
+    });
+
+    writeFile(paths.mainModule, mainImportTemplate);
   }
-  writeFile(paths.mainModule, mainImportTemplate);
 
-  createComponent(startComponent, { module: modulePath });
+  if (moduleSettings.createStartComponent)
+    createComponent(startComponent, { module: modulePath });
 }

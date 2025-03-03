@@ -1,6 +1,9 @@
+import { PagesInterface } from "../constants/types.js";
 import {
   capitalizeComponentPath,
-  capitalizeFirstLetter,
+  checkMissingSettings,
+  ensureNameSuffix,
+  getProjectSettingsOrDefault,
   getProjectType,
 } from "../helpers/index.js";
 import { createModule } from "./createModule.js";
@@ -11,19 +14,41 @@ export async function createPage(
   pageName: string,
   options: { route?: string } = {}
 ) {
+  const pageSettings = getProjectSettingsOrDefault("pages") as PagesInterface;
+
+  checkMissingSettings(pageSettings, "pages");
+
   const projectType = getProjectType();
+
+  const pagePath = ensureNameSuffix(
+    capitalizeComponentPath(pageName, pageSettings.capitalizePathAndName),
+    pageSettings.suffix,
+    pageSettings.addSuffix
+  );
+  const capitalizedPageName = pagePath.split("/").pop() ?? "";
 
   switch (projectType) {
     case "react":
-      createReactPage(pageName, options);
+      await createReactPage(pagePath, options);
       break;
     case "next":
-      await createNextPage(pageName, options);
+      await createNextPage(pagePath, options);
       break;
   }
 
-  const pagePath = capitalizeComponentPath(pageName);
-  const page = capitalizeFirstLetter(pageName.split("/").pop());
+  const pagePathWithoutSuffix = pagePath.replace(
+    new RegExp(`${pageSettings.suffix}$`),
+    ""
+  );
 
-  createModule(pagePath, { full: true, startComponent: `${page}Section` });
+  if (pageSettings.doesCreateTheModule) {
+    createModule(pagePathWithoutSuffix, {
+      full: pageSettings.doesCreateFullModule,
+      startComponent: `${pagePathWithoutSuffix}${
+        pageSettings.addModuleStartComponentSuffix
+          ? pageSettings.moduleStartComponentSuffix
+          : ""
+      }`,
+    });
+  }
 }

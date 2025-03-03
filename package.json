@@ -5,7 +5,8 @@
   "types": "dist/index.d.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc -w",
+    "dev": "tsc -w",
+    "build": "tsc",
     "test": "jest --watch"
   },
   "keywords": [],
@@ -15,7 +16,8 @@
   "dependencies": {
     "chalk": "^5.3.0",
     "commander": "^12.1.0",
-    "inquirer": "^12.4.2"
+    "inquirer": "^12.4.2",
+    "ora": "^8.2.0"
   },
   "bin": {
     "march": "dist/index.js"
