@@ -49,7 +49,13 @@ export const updateRouting = (
   let utilsFileContent = readFileSync(utilsFilePath, "utf8");
   let routingFileContent = readFileSync(routingFilePath, "utf8");
 
-  routingFileContent = ensureAppRoutesImport(routingFileContent);
+  const relativeUtilsFilePath = utilsFilePath
+    .replace(/^.*src\//, "")
+    .replace(/\.ts$/, "");
+  routingFileContent = ensureAppRoutesImport(
+    routingFileContent,
+    relativeUtilsFilePath
+  );
 
   const formattedPageName = formatPageName(pageName);
   const importStatement = `const ${pageName} = lazy(() => import('pages/${pagePath}'));\n\n`;
@@ -164,9 +170,9 @@ const addRouteToAppRoutes = (content: string, newRouteEntry: string) => {
   );
 };
 
-const ensureAppRoutesImport = (content: string) => {
+const ensureAppRoutesImport = (content: string, appRoutesPath: string) => {
   if (!content.includes("import { APP_ROUTES }")) {
-    content = `import { APP_ROUTES } from 'utils';\n${content}`;
+    content = `import { APP_ROUTES } from '${appRoutesPath}';\n\n${content}`;
   }
   return content;
 };
