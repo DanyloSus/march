@@ -4,6 +4,7 @@ import {
   ensureNamePrefix,
   getComponentsPaths,
   getProjectSettingsOrDefault,
+  getTemplateContentWithName,
   writeFile,
 } from "../index.js";
 
@@ -129,6 +130,17 @@ export const connectPage = (
       pagePath
     );
     writeFile(routingFilePath, routingFileContent);
+  }
+
+  if (pageSettings.hasPageStyles) {
+    const stylesFilePath = `src/pages/${pagePath}/styles.ts`;
+    const pageStyleTemplate = getTemplateContentWithName({
+      templateName: "componentStyle.ts",
+      capitalizeName: pageName,
+      uncapitalizeName: formatPageName(pageName),
+      path: pagePath,
+    });
+    writeFile(stylesFilePath, pageStyleTemplate);
   }
 };
 

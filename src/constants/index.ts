@@ -176,5 +176,7 @@ export const MARCH_CONFIG: MarchConfig = {
     doesAddRouteToAppRoutes: true,
     routingDirectory: "src/Routing.tsx",
     doesAddRouteToRouting: true,
+
+    hasPageStyles: false,
   },
 };

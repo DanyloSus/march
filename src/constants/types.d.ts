@@ -41,6 +41,8 @@ export interface PagesInterface extends DefaultConfigCreation {
   alwaysAskPageRoute: boolean;
   appRoutesDirectory: string;
   doesAddRouteToAppRoutes: boolean;
+
+  hasPageStyles: boolean;
 }
 
 export interface MarchConfig {
