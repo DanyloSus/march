@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.3.0] - 2025-03-03
+
+### Fixes
+
+- Fix creating of icon component
+
+### Features
+
+- General:
+    - Add settings in `index.json`
+    - Add settings for React and Next projects
+    - Add deep merge for already created configurations and templates
+    - Add `no-check` for all templates
+    - Add loading and march init for page creation
+- Icon creation:
+    - Add icon settings
+- Component creation:
+    - Add component settings
+- Module creation:
+    - Add module settings
+- Page creation:
+    - Add page settings
+
 ## [1.2.0] - 2025-02-23
 
 ### Features
