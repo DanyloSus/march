@@ -28,7 +28,7 @@ export function createIcon(iconName: string) {
   const iconFilePaths = getComponentsPaths(
     `${iconSettings.baseDirectory}/${formattedPath}`,
     {
-      icon: `${capitalizeName}.tsx`,
+      icon: `index.tsx`,
     }
   );
 
