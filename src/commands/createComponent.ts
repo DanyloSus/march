@@ -1,8 +1,13 @@
+import { ComponentsInterface } from "../constants/types.js";
 import {
   capitalizeComponentPath,
+  checkMissingSettings,
   createDirectoryIfNotExists,
+  ensureNameSuffix,
   getComponentsPaths,
+  getProjectSettingsOrDefault,
   getTemplateContentWithName,
+  uncapitalizeFirstLetter,
   writeFile,
 } from "../helpers/index.js";
 
@@ -10,15 +15,35 @@ export function createComponent(
   componentName: string,
   options: { module?: string }
 ) {
-  const moduleName = capitalizeComponentPath(options.module);
-  const formattedName = capitalizeComponentPath(componentName);
+  const componentSettings = getProjectSettingsOrDefault(
+    "components"
+  ) as ComponentsInterface;
+
+  checkMissingSettings(componentSettings, "components");
+
+  const moduleName = capitalizeComponentPath(
+    options.module,
+    componentSettings.capitalizePathAndName
+  );
+  const formattedPath = ensureNameSuffix(
+    capitalizeComponentPath(
+      componentName,
+      componentSettings.capitalizePathAndName
+    ),
+    componentSettings.suffix,
+    componentSettings.addSuffix
+  );
+
+  const capitalizedName = formattedPath.split("/").pop() ?? "";
+  const uncapitalizedName = uncapitalizeFirstLetter(capitalizedName);
+
   const componentFilePaths = getComponentsPaths(
     moduleName
-      ? `src/modules/${moduleName}/components/${formattedName}`
-      : `src/components/${formattedName}`,
+      ? `src/modules/${moduleName}/components/${formattedPath}`
+      : `${componentSettings.baseDirectory}/${formattedPath}`,
     {
       component: "index.tsx",
-      styles: "styles.ts",
+      styles: `${componentSettings.stylesFileName}.ts`,
     }
   );
 
@@ -26,17 +51,23 @@ export function createComponent(
   createDirectoryIfNotExists(componentFilePaths.baseDir);
 
   // Template for the component
-  const componentTemplate = getTemplateContentWithName(
-    "component.tsx",
-    formattedName.split("/").pop()!
-  );
+  const componentTemplate = getTemplateContentWithName({
+    templateName: "component.tsx",
+    capitalizeName: capitalizedName,
+    uncapitalizeName: uncapitalizedName,
+    path: formattedPath,
+  });
 
-  const componentStyleTemplate = getTemplateContentWithName(
-    "componentStyle.ts",
-    formattedName.split("/").pop()!
-  );
+  const componentStyleTemplate = getTemplateContentWithName({
+    templateName: "componentStyle.ts",
+    capitalizeName: capitalizedName,
+    uncapitalizeName: uncapitalizedName,
+    path: formattedPath,
+  });
 
   // Write files
   writeFile(componentFilePaths.component, componentTemplate);
-  writeFile(componentFilePaths.styles, componentStyleTemplate);
+
+  if (componentSettings.doesCreateStyles)
+    writeFile(componentFilePaths.styles, componentStyleTemplate);
 }

@@ -1,39 +1,50 @@
+import { PagesInterface } from "../../constants/types.js";
 import {
-  capitalizeComponentPath,
-  capitalizeFirstLetter,
+  askForRoute,
   createDirectoryIfNotExists,
   getComponentsPaths,
+  getProjectSettingsOrDefault,
   getTemplateContentWithName,
+  uncapitalizeFirstLetter,
   writeFile,
 } from "../../helpers/index.js";
 import { connectPage } from "../../helpers/react/createPageHelpers.js";
-import { createModule } from "../createModule.js";
 
-export function createPage(pageName: string, options: { route?: string }) {
-  const pagePath = capitalizeComponentPath(pageName);
-  const page = capitalizeFirstLetter(pageName.split("/").pop());
+export async function createPage(
+  pagePath: string,
+  options: { route?: string }
+) {
+  const pageSettings = getProjectSettingsOrDefault("pages") as PagesInterface;
 
-  const paths = getComponentsPaths(`src/pages/${pagePath}Page`, {
-    pageFile: `index.tsx`,
-  });
+  if (pageSettings.alwaysAskPageRoute && !options.route) {
+    options.route = await askForRoute();
+  }
+
+  const capitalizedPageName = pagePath.split("/").pop() ?? "";
+  const uncapitalizedPageName = uncapitalizeFirstLetter(capitalizedPageName);
+
+  const paths = getComponentsPaths(
+    `${pageSettings.baseDirectory}/${pagePath}`,
+    {
+      pageFile: `index.tsx`,
+    }
+  );
 
   // Create necessary directories
   createDirectoryIfNotExists(paths.baseDir);
 
   // Templates for the files
-  const pageTemplate = getTemplateContentWithName(
-    "reactPage.tsx",
-    page,
-    pagePath
-  );
+  const pageTemplate = getTemplateContentWithName({
+    templateName: "reactPage.tsx",
+    capitalizeName: capitalizedPageName,
+    uncapitalizeName: uncapitalizedPageName,
+    path: pagePath,
+  });
 
   // Write files
   writeFile(paths.pageFile, pageTemplate);
 
   if (options.route) {
-    connectPage(page, options.route, pagePath);
+    connectPage(capitalizedPageName, options.route, pagePath);
   }
-
-  // Create the section component using createModule
-  createModule(pagePath, { full: true, startComponent: `${page}Section` });
 }

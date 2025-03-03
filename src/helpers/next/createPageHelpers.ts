@@ -1,5 +1,10 @@
 import { existsSync, readFileSync } from "fs";
-import { getComponentsPaths, writeFile } from "../index.js";
+import { PagesInterface } from "../../constants/types.js";
+import {
+  getComponentsPaths,
+  getProjectSettingsOrDefault,
+  writeFile,
+} from "../index.js";
 
 const APP_ROUTES_DECLARATION = "export const APP_ROUTES = {";
 
@@ -9,7 +14,7 @@ const APP_ROUTES_DECLARATION = "export const APP_ROUTES = {";
 export const updateUtils = (
   utilsFilePath: string,
   pageName: string,
-  pageRoute: string
+  startPageRoute: string
 ) => {
   let utilsFileContent = existsSync(utilsFilePath)
     ? readFileSync(utilsFilePath, "utf8")
@@ -20,7 +25,7 @@ export const updateUtils = (
   }
 
   const formattedPageName = formatPageName(pageName);
-  const newRouteEntry = `${formattedPageName}: "${pageRoute}"`;
+  const newRouteEntry = `${formattedPageName}: "${startPageRoute}"`;
 
   if (!utilsFileContent.includes(newRouteEntry)) {
     utilsFileContent = addRouteToAppRoutes(utilsFileContent, newRouteEntry);
@@ -37,13 +42,14 @@ export const connectPage = (
   startPageRoute: string,
   pagePath: string
 ) => {
-  const pageRoute = startPageRoute.startsWith("/")
-    ? startPageRoute
-    : `/${startPageRoute}`;
-  const utilsPaths = getComponentsPaths("src/utils", { utilsFile: "index.ts" });
+  const pageSettings = getProjectSettingsOrDefault("pages") as PagesInterface;
+
+  const utilsPaths = getComponentsPaths("", {
+    utilsFile: pageSettings.appRoutesDirectory,
+  });
   const utilsFilePath = utilsPaths.utilsFile;
 
-  const utilsFileContent = updateUtils(utilsFilePath, pageName, pageRoute);
+  const utilsFileContent = updateUtils(utilsFilePath, pageName, startPageRoute);
   writeFile(utilsFilePath, utilsFileContent);
 };
 
@@ -58,7 +64,9 @@ const addRouteToAppRoutes = (content: string, newRouteEntry: string) => {
       const trimmedRoutes = routes.trim();
       return `${APP_ROUTES_DECLARATION}${
         trimmedRoutes
-          ? `\n  ${trimmedRoutes},\n  ${newRouteEntry}`
+          ? `\n  ${trimmedRoutes}${
+              trimmedRoutes.endsWith(",") ? "" : ","
+            }\n  ${newRouteEntry}`
           : `\n  ${newRouteEntry}`
       }\n};`;
     }

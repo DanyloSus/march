@@ -1,45 +1,33 @@
-import inquirer from "inquirer";
+import { PagesInterface } from "../../constants/types.js";
 import {
+  askForRoute,
   capitalizeComponentPath,
   capitalizeFirstLetter,
   createDirectoryIfNotExists,
+  ensureNamePrefix,
   getComponentsPaths,
+  getProjectSettingsOrDefault,
   getTemplateContentWithName,
   writeFile,
 } from "../../helpers/index.js";
 import { connectPage } from "../../helpers/next/createPageHelpers.js";
-import { createModule } from "../createModule.js";
-
-async function askForRoute(): Promise<string> {
-  const answers = await inquirer.prompt([
-    {
-      type: "input",
-      name: "route",
-      message: "Enter the page route (e.g., /dashboard):",
-      validate: (input) =>
-        input.trim() !== "" ? true : "Route cannot be empty",
-    },
-  ]);
-
-  return answers.route;
-}
 
 export async function createPage(
-  pageName: string,
+  pagePath: string,
   options: { route?: string }
 ) {
+  const pageSettings = getProjectSettingsOrDefault("pages") as PagesInterface;
+
   if (!options.route) {
     options.route = await askForRoute();
   }
 
-  const route = options.route.startsWith("/")
-    ? options.route
-    : `/${options.route}`;
+  const route = ensureNamePrefix(options.route, "/");
 
-  const pagePath = capitalizeComponentPath(pageName);
-  const page = capitalizeFirstLetter(pageName.split("/").pop());
+  const capitalizedPageName = capitalizeFirstLetter(pagePath.split("/").pop());
+  const uncapitalizedPageName = capitalizeComponentPath(pagePath);
 
-  const paths = getComponentsPaths(`src/pages/${route}`, {
+  const paths = getComponentsPaths(`${pageSettings.baseDirectory}/${route}`, {
     pageFile: `index.tsx`,
   });
 
@@ -47,19 +35,15 @@ export async function createPage(
   createDirectoryIfNotExists(paths.baseDir);
 
   // Templates for the files
-  const pageTemplate = getTemplateContentWithName(
-    "nextPage.tsx",
-    page,
-    pagePath
-  );
+  const pageTemplate = getTemplateContentWithName({
+    templateName: "nextPage.tsx",
+    capitalizeName: capitalizedPageName,
+    uncapitalizeName: uncapitalizedPageName,
+    path: pagePath,
+  });
 
   // Write files
   writeFile(paths.pageFile, pageTemplate);
 
-  if (options.route) {
-    connectPage(page, options.route, pagePath);
-  }
-
-  // Create the section component using createModule
-  createModule(pagePath, { full: true, startComponent: `${page}Section` });
+  connectPage(capitalizedPageName, route, pagePath);
 }
