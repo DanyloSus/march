@@ -51,14 +51,16 @@ export const updateRouting = (
   routingFileContent = ensureAppRoutesImport(routingFileContent);
 
   const formattedPageName = formatPageName(pageName);
-  const importStatement = `const ${pageName} = lazy(() => import('pages/${pagePath}'));\n`;
-  const routeStatement = `      <Route path={APP_ROUTES.${formattedPageName}} element={<LazyLoadPage children={<${pageName} />} />} />\n`;
+  const importStatement = `const ${pageName} = lazy(() => import('pages/${pagePath}'));\n\n`;
+  const routeStatement = `      <Route path={APP_ROUTES.${formattedPageName}} element={<LazyLoadPage children={<${pageName} />} />} />\n\n`;
 
-  routingFileContent = ensureLazyLoadPageImport(
-    routingFileContent,
-    pageName,
-    importStatement
-  );
+  if (!routingFileContent.includes(importStatement)) {
+    routingFileContent = ensureLazyLoadPageImport(
+      routingFileContent,
+      pageName,
+      importStatement
+    );
+  }
 
   const nonLazyLoadPaths = findNonLazyLoadPaths(routingFileContent);
   const { baseLayoutPath, layoutsPaths } = extractLayoutPaths(
