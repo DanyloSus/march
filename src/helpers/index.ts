@@ -83,11 +83,13 @@ export function getTemplateContentWithName({
   capitalizeName,
   uncapitalizeName = "",
   path = "",
+  module = "",
 }: {
   templateName: keyof typeof TEMPLATES;
   capitalizeName: string;
   uncapitalizeName?: string;
   path?: string;
+  module?: string;
 }) {
   const templatePath = resolve(
     process.cwd(),
@@ -100,6 +102,7 @@ export function getTemplateContentWithName({
         .replace(/NAME/g, capitalizeName)
         .replace(/name/g, uncapitalizeName)
         .replace(/PATH/g, path)
+        .replace(/MODULE/g, module)
     );
   } else {
     const template = TEMPLATES[templateName];

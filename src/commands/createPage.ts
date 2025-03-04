@@ -20,26 +20,26 @@ export async function createPage(
 
   const projectType = getProjectType();
 
-  const pagePath = ensureNameSuffix(
+  const formattedPageName = ensureNameSuffix(
     capitalizeComponentPath(pageName, pageSettings.capitalizePathAndName),
     pageSettings.suffix,
     pageSettings.addSuffix
   );
-  const capitalizedPageName = pagePath.split("/").pop() ?? "";
+  const capitalizedPageName = formattedPageName.split("/").pop() ?? "";
 
-  switch (projectType) {
-    case "react":
-      await createReactPage(pagePath, options);
-      break;
-    case "next":
-      await createNextPage(pagePath, options);
-      break;
-  }
-
-  const pagePathWithoutSuffix = pagePath.replace(
+  const pagePathWithoutSuffix = formattedPageName.replace(
     new RegExp(`${pageSettings.suffix}$`),
     ""
   );
+
+  switch (projectType) {
+    case "react":
+      await createReactPage(formattedPageName, pagePathWithoutSuffix, options);
+      break;
+    case "next":
+      await createNextPage(formattedPageName, pagePathWithoutSuffix, options);
+      break;
+  }
 
   if (pageSettings.doesCreateTheModule) {
     createModule(pagePathWithoutSuffix, {

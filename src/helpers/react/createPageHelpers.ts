@@ -16,7 +16,8 @@ const APP_ROUTES_DECLARATION = "export const APP_ROUTES = {";
 export const updateUtils = (
   utilsFilePath: string,
   pageName: string,
-  pageRoute: string
+  pageRoute: string,
+  changePathAttributes: (isFunction: boolean, attributes: string[]) => void
 ) => {
   let utilsFileContent = existsSync(utilsFilePath)
     ? readFileSync(utilsFilePath, "utf8")
@@ -30,7 +31,11 @@ export const updateUtils = (
   const newRouteEntry = `${formattedPageName}: "${pageRoute}"`;
 
   if (!utilsFileContent.includes(newRouteEntry)) {
-    utilsFileContent = addRouteToAppRoutes(utilsFileContent, newRouteEntry);
+    utilsFileContent = addRouteToAppRoutes(
+      utilsFileContent,
+      newRouteEntry,
+      changePathAttributes
+    );
   }
 
   return utilsFileContent;
@@ -44,7 +49,11 @@ export const updateRouting = (
   routingFilePath: string,
   pageName: string,
   pageRoute: string,
-  pagePath: string
+  pagePath: string,
+  pathAttributes: {
+    isFunction: boolean;
+    attributes: string[];
+  }
 ) => {
   let utilsFileContent = readFileSync(utilsFilePath, "utf8");
   let routingFileContent = readFileSync(routingFilePath, "utf8");
@@ -59,7 +68,13 @@ export const updateRouting = (
 
   const formattedPageName = formatPageName(pageName);
   const importStatement = `const ${pageName} = lazy(() => import('pages/${pagePath}'));\n\n`;
-  const routeStatement = `      <Route path={APP_ROUTES.${formattedPageName}} element={<LazyLoadPage children={<${pageName} />} />} />\n\n`;
+  const routeStatement: string = `      <Route path={APP_ROUTES.${formattedPageName}${
+    pathAttributes.isFunction
+      ? `(${pathAttributes.attributes
+          .map((value) => `':${value}'`)
+          .join(", ")})`
+      : ""
+  }} element={<LazyLoadPage children={<${pageName} />} />} />\n\n`;
 
   if (!routingFileContent.includes(importStatement)) {
     routingFileContent = ensureLazyLoadPageImport(
@@ -117,10 +132,30 @@ export const connectPage = (
   });
   const utilsFilePath = utilsPaths.utilsFile;
 
+  const pathAttributes: {
+    isFunction: boolean;
+    attributes: string[];
+  } = {
+    isFunction: false,
+    attributes: [],
+  };
+
+  const changePathAttributes = (isFunction: boolean, attributes: string[]) => {
+    pathAttributes.isFunction = isFunction;
+    pathAttributes.attributes = attributes;
+  };
+
   if (pageSettings.doesAddRouteToAppRoutes) {
-    const utilsFileContent = updateUtils(utilsFilePath, pageName, pageRoute);
+    const utilsFileContent = updateUtils(
+      utilsFilePath,
+      pageName,
+      pageRoute,
+      changePathAttributes
+    );
     writeFile(utilsFilePath, utilsFileContent);
   }
+
+  console.log(pathAttributes);
 
   const routingPaths = getComponentsPaths("", {
     routingFile: pageSettings.routingDirectory,
@@ -133,7 +168,8 @@ export const connectPage = (
       routingFilePath,
       pageName,
       pageRoute,
-      pagePath
+      pagePath,
+      pathAttributes
     );
     writeFile(routingFilePath, routingFileContent);
   }
@@ -154,7 +190,11 @@ const formatPageName = (pageName: string) => {
   return pageName.charAt(0).toLowerCase() + pageName.slice(1);
 };
 
-const addRouteToAppRoutes = (content: string, newRouteEntry: string) => {
+const addRouteToAppRoutes = (
+  content: string,
+  newRouteEntry: string,
+  changePathAttributes: (isFunction: boolean, attributes: string[]) => void
+) => {
   return content.replace(
     /export const APP_ROUTES = {([\s\S]*?)};/,
     (_, routes) => {
@@ -166,6 +206,7 @@ const addRouteToAppRoutes = (content: string, newRouteEntry: string) => {
           const params = [...path.matchAll(/[:\[]([a-zA-Z]+)[\]]?/g)];
           if (params.length) {
             const paramNames = params.map((match) => match[1]);
+            changePathAttributes(true, paramNames);
             const paramDefinitions = paramNames
               .map((param: string) => `${param}: string`)
               .join(", ");

@@ -62,12 +62,31 @@ const addRouteToAppRoutes = (content: string, newRouteEntry: string) => {
     /export const APP_ROUTES = {([\s\S]*?)};/,
     (_, routes) => {
       const trimmedRoutes = routes.trim();
+      const formattedRouteEntry = newRouteEntry.replace(
+        /"([^"]+)"/g,
+        (_, path) => {
+          // Match both ":param" and "[param]" patterns
+          const params = [...path.matchAll(/[:\[]([a-zA-Z]+)[\]]?/g)];
+          if (params.length) {
+            const paramNames = params.map((match) => match[1]);
+            const paramDefinitions = paramNames
+              .map((param: string) => `${param}: string`)
+              .join(", ");
+            return `(${paramDefinitions}) => \`${path.replace(
+              /[:\[]([a-zA-Z]+)[\]]?/g,
+              (_: string, param: string) => `\${${param}}`
+            )}\``;
+          }
+          // ✅ No params: just return plain string
+          return `"${path}"`;
+        }
+      );
       return `${APP_ROUTES_DECLARATION}${
         trimmedRoutes
           ? `\n  ${trimmedRoutes}${
               trimmedRoutes.endsWith(",") ? "" : ","
-            }\n  ${newRouteEntry}`
-          : `\n  ${newRouteEntry}`
+            }\n  ${formattedRouteEntry}`
+          : `\n  ${formattedRouteEntry}`
       }\n};`;
     }
   );

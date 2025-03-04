@@ -5,6 +5,7 @@ import {
   capitalizeFirstLetter,
   createDirectoryIfNotExists,
   ensureNamePrefix,
+  ensureNameSuffix,
   getComponentsPaths,
   getProjectSettingsOrDefault,
   getTemplateContentWithName,
@@ -14,6 +15,7 @@ import { connectPage } from "../../helpers/next/createPageHelpers.js";
 
 export async function createPage(
   pagePath: string,
+  pagePathWithoutSuffix: string,
   options: { route?: string }
 ) {
   const pageSettings = getProjectSettingsOrDefault("pages") as PagesInterface;
@@ -34,12 +36,22 @@ export async function createPage(
   // Create necessary directories
   createDirectoryIfNotExists(paths.baseDir);
 
+  const moduleMainImport = ensureNameSuffix(
+    capitalizeComponentPath(
+      pagePathWithoutSuffix,
+      pageSettings.capitalizePathAndName
+    ),
+    pageSettings.moduleStartComponentSuffix,
+    pageSettings.addModuleStartComponentSuffix
+  );
+
   // Templates for the files
   const pageTemplate = getTemplateContentWithName({
     templateName: "nextPage.tsx",
     capitalizeName: capitalizedPageName,
     uncapitalizeName: uncapitalizedPageName,
-    path: pagePath,
+    path: pagePathWithoutSuffix,
+    module: moduleMainImport,
   });
 
   // Write files

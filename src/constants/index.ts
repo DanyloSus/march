@@ -67,7 +67,7 @@ export { ${startComponent} } from "./components/${startComponent}";
 `;
 
 export const NEXT_PAGE_TEMPLATE = (page: string, pagePath: string) => `
-import { ${page}Section } from 'modules/${pagePath}';
+import { MODULE } from 'modules/${pagePath}';
 
 export function getServerSideProps() {
   return {
@@ -77,7 +77,7 @@ export function getServerSideProps() {
 
 const ${page} = () => {
   return (
-    <${page}Section />
+    <MODULE />
   );
 };
 
@@ -87,15 +87,15 @@ export default ${page};
 export const PAGE_TEMPLATE = (page: string, pagePath: string) => `
 import { FC } from "react";
 
-import { ${page}Section } from "modules/${pagePath}";
+import { MODULE } from "modules/${pagePath}";
 
-interface ${page}PageProps {}
+interface ${page}Props {}
 
-const ${page}Page: FC<${page}PageProps> = () => {
-  return <${page}Section />;
+const ${page}: FC<${page}Props> = () => {
+  return <MODULE />;
 };
 
-export default ${page}Page;
+export default ${page};
     `;
 
 export const TEMPLATES = {

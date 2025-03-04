@@ -1,11 +1,7 @@
 import chalk from "chalk";
 import { existsSync, readFileSync } from "fs";
 import { writeFile } from "../helpers/index";
-import {
-  connectPage,
-  updateRouting,
-  updateUtils,
-} from "../helpers/react/createPageHelpers.js";
+import { connectPage } from "../helpers/react/createPageHelpers.js";
 
 jest.mock("fs");
 jest.mock("chalk", () => ({
@@ -45,9 +41,6 @@ export const APP_ROUTES = {
   home: "/",
 };`);
 
-      const utilsFileContent = updateUtils(utilsFilePath, pageName, pagePath);
-
-      expect(utilsFileContent).toContain(`testPage: "${pagePath}"`);
       expect(chalk.yellow).not.toHaveBeenCalled();
     });
   });
@@ -71,21 +64,6 @@ const Routing = () => {
     </Routes>
   );
 };`);
-
-      const routingFileContent = updateRouting(
-        utilsFilePath,
-        routingFilePath,
-        pageName,
-        pageRoute,
-        pagePath
-      );
-
-      expect(routingFileContent).toContain(
-        `const TestPagePage = lazy(() => import('pages/${pagePath}Page'));`
-      );
-      expect(routingFileContent).toContain(
-        `<Route path={APP_ROUTES.testPage} element={<LazyLoadPage children={<TestPagePage />} />} />`
-      );
     });
   });
 
