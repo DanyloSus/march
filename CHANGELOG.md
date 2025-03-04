@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.9] - 2025-03-04
+
+### Fixes
+
+- Fix component that will be created for start component
+
 ## [1.3.8] - 2025-03-04
 
 ### Fixes
