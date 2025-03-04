@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.5] - 2025-03-04
+
+### Fixes
+
+I forgot about building the package again
+
 ## [1.3.4] - 2025-03-04
 
 ### Fixes
