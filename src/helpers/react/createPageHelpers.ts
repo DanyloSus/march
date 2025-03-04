@@ -88,7 +88,7 @@ export const updateRouting = (
     const layoutRegex = new RegExp(
       matchingLayoutName
         ? `<Route path={APP_ROUTES.${matchingLayoutName}} element={<[^>]+>}>
-`
+  `
         : "<Routes>\n"
     );
     routingFileContent = routingFileContent.replace(
@@ -167,12 +167,7 @@ const addRouteToAppRoutes = (content: string, newRouteEntry: string) => {
           if (params.length) {
             const paramNames = params.map((match) => match[1]);
             const paramDefinitions = paramNames
-              .map(
-                (param: string) =>
-                  `${param}: string = "${
-                    path.includes(`:${param}`) ? `:${param}` : `[${param}]`
-                  }"`
-              )
+              .map((param: string) => `${param}: string`)
               .join(", ");
             return `(${paramDefinitions}) => \`${path.replace(
               /[:\[]([a-zA-Z]+)[\]]?/g,
