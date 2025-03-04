@@ -51,7 +51,7 @@ export async function createPage(
     capitalizeName: capitalizedPageName,
     uncapitalizeName: uncapitalizedPageName,
     path: pagePathWithoutSuffix,
-    module: moduleMainImport,
+    module: moduleMainImport.split("/").pop(),
   });
 
   // Write files
