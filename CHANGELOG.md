@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.6] - 2025-03-04
+
+### Fixes
+
+Try to add windows build, instead of linux's
+
 ## [1.3.5] - 2025-03-04
 
 ### Fixes
