@@ -87,6 +87,7 @@ export function createModule(
       capitalizeName: startComponent,
       uncapitalizeName: uncapitalizedStartComponent,
       path: modulePath,
+      module: startComponent.split("/").pop(),
     });
 
     writeFile(paths.mainModule, mainImportTemplate);
