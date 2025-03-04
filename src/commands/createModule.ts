@@ -94,5 +94,7 @@ export function createModule(
   }
 
   if (moduleSettings.createStartComponent)
-    createComponent(startComponent, { module: modulePath });
+    createComponent(startComponent.split("/").pop() || "", {
+      module: modulePath,
+    });
 }
