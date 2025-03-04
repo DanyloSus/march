@@ -155,8 +155,6 @@ export const connectPage = (
     writeFile(utilsFilePath, utilsFileContent);
   }
 
-  console.log(pathAttributes);
-
   const routingPaths = getComponentsPaths("", {
     routingFile: pageSettings.routingDirectory,
   });
