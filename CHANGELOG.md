@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.8] - 2025-03-04
+
+### Fixes
+
+- Fix MODULE text for main import
+
 ## [1.3.7] - 2025-03-04
 
 ### Fixes
