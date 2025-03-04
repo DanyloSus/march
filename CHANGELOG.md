@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.7] - 2025-03-04
+
+### Fixes
+
+- Fix module import if page has directories
+
 ## [1.3.6] - 2025-03-04
 
 ### Fixes
