@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.3] - 2025-03-04
+
+### Fixes
+
+- Fix creating of function routes in `Routing.tsx`, by adding its params
+- Add function routes for `Next`
+- Fix creation of additional suffixes and incorrect modules while page creation
+
 ## [1.3.2] - 2025-03-04
 
 ### Fixes
