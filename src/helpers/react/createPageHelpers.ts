@@ -102,9 +102,8 @@ export const updateRouting = (
   ) {
     const layoutRegex = new RegExp(
       matchingLayoutName
-        ? `<Route path={APP_ROUTES.${matchingLayoutName}} element={<[^>]+>}>
-  `
-        : "<Routes>\n"
+        ? `<Route path={APP_ROUTES.${matchingLayoutName}} element={<[^>]+>}>\\r?\\n`
+        : "<Routes>\\r?\\n"
     );
     routingFileContent = routingFileContent.replace(
       layoutRegex,
@@ -242,7 +241,7 @@ const ensureLazyLoadPageImport = (
 ) => {
   if (!content.includes(`const ${pageName}Page`)) {
     content = content.replace(
-      /(const Routing = \(\) => {\n)/,
+      /(const Routing = \(\) => \{\r?\n)/,
       `${importStatement}$1`
     );
   }
