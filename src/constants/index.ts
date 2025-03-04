@@ -63,7 +63,7 @@ export const DUMMY_DATA = "dummy data";
 `;
 
 export const MAIN_IMPORT_TEMPLATE = (startComponent: string) => `
-export { ${startComponent} } from "./components/${startComponent}";
+export { MODULE } from "./components/MODULE";
 `;
 
 export const NEXT_PAGE_TEMPLATE = (page: string, pagePath: string) => `

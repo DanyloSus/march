@@ -50,7 +50,7 @@ export async function createPage(
     templateName: "reactPage.tsx",
     capitalizeName: capitalizedPageName,
     uncapitalizeName: uncapitalizedPageName,
-    path: pagePathWithoutSuffix.split("/").pop(),
+    path: pagePathWithoutSuffix,
     module: moduleMainImport.split("/").pop(),
   });
 
