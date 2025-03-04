@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.4] - 2025-03-04
+
+### Fixes
+
+- Add cross-platform compatibility for page creation and creating project 
+
 ## [1.3.3] - 2025-03-04
 
 ### Fixes
