@@ -50,7 +50,9 @@ export function cloneRepo(projectName: string) {
 
     // Initialize a new Git repository and install dependencies
     exec(
-      `cd ./${projectName} && rm -rf .git && git init && npm install && march init`,
+      `cd ./${projectName} && ${
+        process.platform === "win32" ? "rmdir /s /q .git" : "rm -rf .git"
+      } && git init && npm install && npx march init`,
       (initError, initStdout, initStderr) => {
         if (initError) {
           initSpinner.fail(
