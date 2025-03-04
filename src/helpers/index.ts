@@ -124,11 +124,13 @@ export const getCustomTemplateContent = ({
   capitalizeName,
   uncapitalizeName = "",
   path = "",
+  module = "",
 }: {
   templateName: string;
   capitalizeName: string;
   uncapitalizeName?: string;
   path?: string;
+  module?: string;
 }) => {
   const templatePath = resolve(
     process.cwd(),
@@ -141,6 +143,7 @@ export const getCustomTemplateContent = ({
         .replace(/NAME/g, capitalizeName)
         .replace(/name/g, uncapitalizeName)
         .replace(/PATH/g, path)
+        .replace(/MODULE/g, module)
     );
   } else {
     console.log(
