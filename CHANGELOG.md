@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.3.2] - 2025-03-04
+
+### Fixes
+
+- Fix creating of routes in `APP_ROUTES`, by removing params from function
+
+## [1.3.1] - 2025-03-03
+
+I forgot about building the package
+
 ## [1.3.0] - 2025-03-03
 
 ### Fixes
