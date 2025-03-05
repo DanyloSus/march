@@ -10,7 +10,7 @@ import { program } from "commander";
 import { initializeMarch } from "./commands/initializeMarch.js";
 
 program
-  .version("1.0.0")
+  .version("1.3.10")
   .description("March to easier work with Module ARCHitecture");
 
 program

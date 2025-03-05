@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.3.10] - 2025-03-05
+
+### Fixes
+
+- Fix module main import that wasn't capitalized
+
 ## [1.3.9] - 2025-03-04
 
 ### Fixes
