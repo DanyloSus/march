@@ -33,12 +33,10 @@ export function createModule(
     capitalizedModuleName
   );
 
-  const startComponent = options.startComponent
-    ? capitalizeComponentPath(
-        options.startComponent,
-        moduleSettings.capitalizePathAndName
-      )
-    : capitalizedModuleName;
+  const startComponent = capitalizeComponentPath(
+    options.startComponent ? options.startComponent : capitalizedModuleName,
+    moduleSettings.capitalizePathAndName
+  );
   const uncapitalizedStartComponent = uncapitalizeFirstLetter(startComponent);
 
   const moduleElements =
